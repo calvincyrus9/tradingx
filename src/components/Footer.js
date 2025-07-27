@@ -1,6 +1,5 @@
 // src/components/Footer.js
 import React from 'react';
-import { FaMail, FaPhone ,FaMessageSquare, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -21,13 +20,11 @@ const Footer = () => {
             </p>
             <div className="mt-6 flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-cyan-400">
-                <FaTwitter className="w-5 h-5" />
+                
               </a>
               <a href="#" className="text-gray-400 hover:text-cyan-400">
-                <FaLinkedin className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-cyan-400">
-                <FaFacebook className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -47,15 +44,12 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white">Contact Us</h3>
             <ul className="mt-4 space-y-3">
               <li className="flex items-start">
-                <FaMail className="w-5 h-5 text-cyan-400 mt-1 flex-shrink-0" />
                 <span className="ml-3 text-gray-400">support@futuristictrading.com</span>
               </li>
               <li className="flex items-start">
-                <FaPhone className="w-5 h-5 text-cyan-400 mt-1 flex-shrink-0" />
                 <span className="ml-3 text-gray-400">+1 (555) 123-4567</span>
               </li>
               <li className="flex items-start">
-                <FaMessageSquare className="w-5 h-5 text-cyan-400 mt-1 flex-shrink-0" />
                 <span className="ml-3 text-gray-400">WhatsApp Chat</span>
               </li>
             </ul>
