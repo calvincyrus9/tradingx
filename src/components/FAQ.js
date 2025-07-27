@@ -1,5 +1,9 @@
 // src/components/FAQ.js
 import React, { useState } from 'react';
+import { 
+  HiOutlineChevronDown as FiChevronDown, 
+  HiOutlineChevronUp as FiChevronUp 
+} from 'react-icons/hi';
 
 const FAQ = () => {
   const faqs = [
@@ -50,6 +54,18 @@ const FAQ = () => {
         <div className="mt-16 space-y-4">
           {faqs.map((faq, index) => (
             <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl overflow-hidden">
+              <button
+                className="w-full flex justify-between items-center p-6 text-left"
+                onClick={() => toggleFAQ(index)}
+              >
+                <span className="text-lg font-medium text-white">{faq.question}</span>
+                {openIndex === index ? (
+                  <FiChevronUp className="w-5 h-5 text-cyan-400" />
+                ) : (
+                  <FiChevronDown className="w-5 h-5 text-cyan-400" />
+                )}
+              </button>
+              
               {openIndex === index && (
                 <div className="px-6 pb-6 text-gray-300">
                   {faq.answer}

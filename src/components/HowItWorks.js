@@ -1,6 +1,10 @@
 // src/components/HowItWorks.js
 import React from 'react';
-import { FiUser, FiBell, FiTrendingUp } from 'react-icons/fi';
+import { 
+  HiOutlineUser as FiUser, 
+  HiOutlineBell as FiBell, 
+  HiOutlineTrendingUp as FiTrendingUp 
+} from 'react-icons/hi';
 
 const HowItWorks = () => {
   const steps = [

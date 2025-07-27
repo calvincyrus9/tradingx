@@ -1,6 +1,13 @@
 // src/components/Footer.js
 import React from 'react';
-import { FiMail, FiPhone, FiMessageSquare, FiTwitter, FiLinkedin, FiFacebook } from 'react-icons/fi';
+import { 
+  HiOutlineMail as FiMail, 
+  HiOutlinePhone as FiPhone, 
+  HiOutlineChatAlt2 as FiMessageSquare,
+  HiOutlineTwitter as FiTwitter,
+  HiOutlineLinkedin as FiLinkedin,
+  HiOutlineFacebook as FiFacebook
+} from 'react-icons/hi';
 
 const Footer = () => {
   return (

@@ -1,6 +1,6 @@
 // src/components/Header.js
 import React, { useState } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { HiOutlineMenu as FiMenu, HiOutlineX as FiX } from 'react-icons/hi';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
