@@ -77,9 +77,9 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Futuristic Trading. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
-            <a href="#" className="text-gray-500 hover:text-cyan-400 text-sm">Privacy Policy</a>
-            <a href="#" className="text-gray-500 hover:text-cyan-400 text-sm">Terms of Service</a>
-            <a href="#" className="text-gray-500 hover:text-cyan-400 text-sm">Risk Disclosure</a>
+            <a href="/privacy-policy" className="text-gray-500 hover:text-cyan-400 text-sm">Privacy Policy</a>
+            <a href="/terms-of-service" className="text-gray-500 hover:text-cyan-400 text-sm">Terms of Service</a>
+            <a href="/risk-disclosure" className="text-gray-500 hover:text-cyan-400 text-sm">Risk Disclosure</a>
           </div>
         </div>
       </div>
