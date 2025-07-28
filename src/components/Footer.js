@@ -1,5 +1,6 @@
 // src/components/Footer.js
 import React from 'react';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -77,10 +78,16 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Futuristic Trading. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
-            <a href="/privacy-policy" className="text-gray-500 hover:text-cyan-400 text-sm">Privacy Policy</a>
-            <a href="/terms-of-service" className="text-gray-500 hover:text-cyan-400 text-sm">Terms of Service</a>
-            <a href="/risk-disclosure" className="text-gray-500 hover:text-cyan-400 text-sm">Risk Disclosure</a>
-          </div>
+  <Link href="/privacy-policy" legacyBehavior>
+    <a className="text-gray-500 hover:text-cyan-400 text-sm">Privacy Policy</a>
+  </Link>
+  <Link href="/terms-of-service" legacyBehavior>
+    <a className="text-gray-500 hover:text-cyan-400 text-sm">Terms of Service</a>
+  </Link>
+  <Link href="/risk-disclosure" legacyBehavior>
+    <a className="text-gray-500 hover:text-cyan-400 text-sm">Risk Disclosure</a>
+  </Link>
+</div>
         </div>
       </div>
     </footer>
