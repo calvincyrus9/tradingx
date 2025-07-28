@@ -1,10 +1,8 @@
 // src/pages/legal/terms-of-service.js
 import React from 'react';
-import LegalLayout from '@/components/LegalLayout';
 
 const TermsOfService = () => {
   return (
-    <LegalLayout title="Terms of Service">
       <div className="space-y-6">
         <p className="text-gray-300">
           Last updated: July 28, 2025
@@ -116,7 +114,6 @@ const TermsOfService = () => {
           </p>
         </div>
       </div>
-    </LegalLayout>
   );
 };
 

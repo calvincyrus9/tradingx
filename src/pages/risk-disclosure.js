@@ -1,10 +1,8 @@
 // src/pages/legal/risk-disclosure.js
 import React from 'react';
-import LegalLayout from '@/components/LegalLayout';
 
 const RiskDisclosure = () => {
   return (
-    <LegalLayout title="Risk Disclosure">
       <div className="space-y-6">
         <div className="bg-gradient-to-r from-red-900/20 to-gray-900 border border-red-500/20 rounded-xl p-6">
           <h2 className="text-2xl font-bold text-red-400">Important Risk Warning</h2>
@@ -96,7 +94,6 @@ const RiskDisclosure = () => {
           </p>
         </div>
       </div>
-    </LegalLayout>
   );
 };
 

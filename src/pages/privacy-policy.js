@@ -1,10 +1,8 @@
 // src/pages/legal/privacy-policy.js
 import React from 'react';
-import LegalLayout from '@/components/LegalLayout';
 
 const PrivacyPolicy = () => {
   return (
-    <LegalLayout title="Privacy Policy">
       <div className="space-y-6">
         <p className="text-gray-300">
           Last updated: July 28, 2025
@@ -96,7 +94,6 @@ const PrivacyPolicy = () => {
           </ul>
         </div>
       </div>
-    </LegalLayout>
   );
 };
 
