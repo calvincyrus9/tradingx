@@ -1,4 +1,6 @@
 // src/components/Header.js
+'use client';
+
 import React, { useState } from 'react';
 import { HiOutlineMenu as FiMenu, HiOutlineX as FiX } from 'react-icons/hi';
 
