@@ -78,13 +78,13 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Futuristic Trading. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
-  <Link href="/privacy-policy" legacyBehavior>
+  <Link href="/legal/privacy-policy" legacyBehavior>
     <a className="text-gray-500 hover:text-cyan-400 text-sm">Privacy Policy</a>
   </Link>
-  <Link href="/terms-of-service" legacyBehavior>
+  <Link href="/legal/terms-of-service" legacyBehavior>
     <a className="text-gray-500 hover:text-cyan-400 text-sm">Terms of Service</a>
   </Link>
-  <Link href="/risk-disclosure" legacyBehavior>
+  <Link href="/legal/risk-disclosure" legacyBehavior>
     <a className="text-gray-500 hover:text-cyan-400 text-sm">Risk Disclosure</a>
   </Link>
 </div>
