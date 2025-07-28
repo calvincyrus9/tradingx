@@ -21,10 +21,10 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             <a href="#" className="text-cyan-300 hover:text-cyan-100 font-medium">Home</a>
-            <a href="#" className="text-gray-400 hover:text-cyan-100 font-medium">Performance</a>
-            <a href="#" className="text-gray-400 hover:text-cyan-100 font-medium">Pricing</a>
-            <a href="#" className="text-gray-400 hover:text-cyan-100 font-medium">Testimonials</a>
-            <a href="#" className="text-gray-400 hover:text-cyan-100 font-medium">Contact</a>
+            <a href="/Performance" className="text-gray-400 hover:text-cyan-100 font-medium">Performance</a>
+            <a href="/Pricing" className="text-gray-400 hover:text-cyan-100 font-medium">Pricing</a>
+            <a href="/Testimonials" className="text-gray-400 hover:text-cyan-100 font-medium">Testimonials</a>
+            <a href="/Contact" className="text-gray-400 hover:text-cyan-100 font-medium">Contact</a>
           </nav>
           
           <div className="hidden md:flex items-center">
