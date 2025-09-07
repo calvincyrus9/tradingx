@@ -350,7 +350,9 @@
                     subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
                     
                     emailContent = `Hello,
+
 Thanks for booking your 24-hour trial with ${websiteName}! Below are your login details to get you started and enjoy endless entertainment:
+
 💡 VPN Recommended: Use any VPN (even a free one) to bypass geo-restrictions and stream like a pro! 😎
 🗺️ Country of Delivery: Auto / VPN whitelisted
 ⏰ Expiration: 24 Hours
@@ -420,23 +422,23 @@ ${websiteName} Team 🔥`;
 
 Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
 
-✅ ${months} Months Renewal link : ${paymentLink}`;
+✅ ${months} Months Renewal link : [${months} Months Account](${paymentLink})`;
 
-                    // Add multiple devices note if applicable
-                    if (devices > 1) {
-                        emailContent += `
+if (devices > 1) {
+    emailContent += `
 
 For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
-                    }
+}
 
-                    emailContent += `
+emailContent += `
 
 If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}.
 
 Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 
-Best regards,
+Best regards,  
 The ${websiteName} Team`;
+
                     
                 } else if (templateType === 'renew-confirm') {
                     subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
@@ -563,3 +565,4 @@ ${websiteName} Team`;
     </script>
 </body>
 </html>
+
