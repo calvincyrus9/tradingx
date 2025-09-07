@@ -97,9 +97,9 @@
                             <select id="website" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                                 <option value="">Choose a website</option>
                                 <option value="xtreamcube.com">xtreamcube.com</option>
-                                <option value="iptvprime.com">iptvprime.com</option>
-                                <option value="streamking.com">streamking.com</option>
-                                <option value="bestiptv.com">bestiptv.com</option>
+                                <option value="8ktv.tv">8ktv.tv</option>
+                                <option value="tvtoohigh.com">tvtoohigh.com</option>
+                                <option value="redixel.com">redixel.com</option>
                             </select>
                         </div>
                         
@@ -273,6 +273,12 @@
             const copyNotification = document.getElementById('copyNotification');
             const notificationText = document.getElementById('notificationText');
             
+            // Helper function to extract website name without extension
+            function getWebsiteName(fullWebsite) {
+                if (!fullWebsite) return '';
+                return fullWebsite.split('.')[0];
+            }
+            
             // Payment link visibility toggle
             toggleLinks.addEventListener('click', function() {
                 paymentLinks.classList.toggle('hidden');
@@ -318,6 +324,7 @@
             generateBtn.addEventListener('click', function() {
                 const website = websiteSelect.value;
                 const templateType = templateSelect.value;
+                const websiteName = getWebsiteName(website);
                 
                 if (!website || !templateType) {
                     alert('Please select both a website and a template type.');
@@ -340,10 +347,10 @@
                     const password = urlObj.searchParams.get('password');
                     const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
                     
-                    subject = `🎉 Welcome to Your 24-Hour Free Trial with ${website}! 🎉`;
+                    subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
                     
                     emailContent = `Hello,
-Thanks for booking your 24-hour trial with ${website}! Below are your login details to get you started and enjoy endless entertainment:
+Thanks for booking your 24-hour trial with ${websiteName}! Below are your login details to get you started and enjoy endless entertainment:
 💡 VPN Recommended: Use any VPN (even a free one) to bypass geo-restrictions and stream like a pro! 😎
 🗺️ Country of Delivery: Auto / VPN whitelisted
 ⏰ Expiration: 24 Hours
@@ -387,8 +394,8 @@ Reply to this email or contact us via chat or WhatsApp at +1 765 244-5905
 ✨ Enjoy your trial! 😊
 Best regards,
 
-${website}
-${website} Team 🔥`;
+${websiteName}
+${websiteName} Team 🔥`;
                     
                 } else if (templateType === 'renew-request') {
                     const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
@@ -407,7 +414,7 @@ ${website} Team 🔥`;
                         paymentLink = `${months} Months Renewal: ${customLink}`;
                     }
                     
-                    subject = `✅ Your ${website} Renewal Request - Pass ${months}`;
+                    subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                     
                     emailContent = `Hello,
 
@@ -426,25 +433,25 @@ For multiple devices, please adjust the quantity at checkout to receive a 15% di
 
 If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}.
 
-Thank you for continuing to choose ${website}. Enjoy your entertainment!
+Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 
 Best regards,
-The ${website} Team`;
+The ${websiteName} Team`;
                     
                 } else if (templateType === 'renew-confirm') {
-                    subject = `✅🎉 Account Renewal Confirmation - ${website}!`;
+                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
                     
                     emailContent = `Hello,
-Thank you for renewing your account with ${website}!
+Thank you for renewing your account with ${websiteName}!
 Here are your updated details:
             👤 Username:
             📅 New Expiration Date:
 We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
 Happy Streaming! 😊
-✨ The ${website} Team ✨`;
+✨ The ${websiteName} Team ✨`;
                 
                 } else if (templateType === 'trial-spam') {
-                    subject = `Important: Trial Request Issue - ${website}`;
+                    subject = `Important: Trial Request Issue - ${websiteName}`;
                     
                     emailContent = `Hello,
 Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.
@@ -456,10 +463,10 @@ To proceed, please disable any VPN or proxy, then resend your 24-hour trial or r
 Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.
 Thank you for helping us keep the system fair and secure!
 Best regards,
-${website}`;
+${websiteName}`;
                 
                 } else if (templateType === 'quick-renew') {
-                    subject = `Continue Your IPTV Experience - ${website}`;
+                    subject = `Continue Your IPTV Experience - ${websiteName}`;
                     
                     emailContent = `Hello,
 
@@ -484,10 +491,10 @@ Email: support@${website}
 We look forward to ensuring you have the best streaming experience.
 
 Best regards,
-www.${website}`;
+www.${websiteName}`;
                 
                 } else if (templateType === 'quick-renew-after-trial') {
-                    subject = `Make the Most of Your Trial - ${website}`;
+                    subject = `Make the Most of Your Trial - ${websiteName}`;
                     
                     emailContent = `Hello,
 
@@ -498,7 +505,7 @@ This will allow you to fully discover the content and ensure that you are fully 
 You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.
 
 Regards,
-${website} Team`;
+${websiteName} Team`;
                 }
                 
                 // Display the generated email and subject
