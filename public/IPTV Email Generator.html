@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Email Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#2563EB',
+                        accent: '#1D4ED8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .template-card {
+            transition: all 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+        }
+        .output-box {
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            background: #f8fafc;
+        }
+        .btn {
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .highlight {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3B82F6;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+        }
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10B981;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+        @media (max-width: 768px) {
+            .flex-wrap {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="py-8">
+    <div class="copy-notification" id="copyNotification">
+        <i class="fas fa-check-circle mr-2"></i> <span id="notificationText">Email content copied to clipboard!</span>
+    </div>
+    
+    <div class="container mx-auto px-4">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">IPTV Email Generator</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Create professional emails for trials, renewals, and customer support with dynamic content</p>
+        </header>
+
+        <main class="bg-white rounded-xl shadow-xl p-6 md:p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Input Section -->
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Generate Your Email</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Website Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Website</label>
+                            <select id="website" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                <option value="">Choose a website</option>
+                                <option value="xtreamcube.com">xtreamcube.com</option>
+                                <option value="iptvprime.com">iptvprime.com</option>
+                                <option value="streamking.com">streamking.com</option>
+                                <option value="bestiptv.com">bestiptv.com</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Template Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Template</label>
+                            <select id="template" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                <option value="">Choose a template</option>
+                                <option value="trial">Free Trial</option>
+                                <option value="renew-request">Renew Request</option>
+                                <option value="renew-confirm">Renew Confirm</option>
+                                <option value="trial-spam">Trial Spam</option>
+                                <option value="quick-renew">Quick Renew</option>
+                                <option value="quick-renew-after-trial">Quick Renew After Trial</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Dynamic Fields -->
+                        <div id="dynamicFields" class="space-y-4 p-4 bg-gray-50 rounded-lg">
+                            <div id="m3uField" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">M3U URL</label>
+                                <input type="text" id="m3uUrl" placeholder="Enter M3U URL" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                            </div>
+                            
+                            <div id="paymentField" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Option</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="paymentOption" value="1" class="h-4 w-4 text-primary">
+                                        <span class="ml-2">1 Month</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="paymentOption" value="3" class="h-4 w-4 text-primary">
+                                        <span class="ml-2">3 Months</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="paymentOption" value="6" class="h-4 w-4 text-primary">
+                                        <span class="ml-2">6 Months</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="paymentOption" value="12" class="h-4 w-4 text-primary">
+                                        <span class="ml-2">12 Months</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-2 gap-3 hidden" id="paymentLinks">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">1 Month Link</label>
+                                        <input type="text" id="link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">3 Months Link</label>
+                                        <input type="text" id="link3" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">6 Months Link</label>
+                                        <input type="text" id="link6" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">12 Months Link</label>
+                                        <input type="text" id="link12" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    </div>
+                                </div>
+                                
+                                <button type="button" id="toggleLinks" class="mt-3 text-sm text-primary hover:text-secondary flex items-center">
+                                    <i class="fas fa-plus-circle mr-1"></i> Add custom payment links
+                                </button>
+                            </div>
+                            
+                            <div id="deviceField" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Devices</label>
+                                <select id="deviceCount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="1">1 Device</option>
+                                    <option value="2">2 Devices</option>
+                                    <option value="3">3 Devices</option>
+                                    <option value="4">4 Devices</option>
+                                    <option value="5">5 Devices</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button id="generateBtn" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center">
+                            <i class="fas fa-envelope mr-2"></i> Generate Email
+                        </button>
+                    </div>
+                    
+                    <!-- Template Previews -->
+                    <h3 class="text-xl font-semibold text-gray-800 mt-10 mb-4">Available Templates</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-ticket-alt text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Free Trial</h4>
+                                    <p class="text-sm text-gray-600">Send trial account details</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-sync-alt text-green-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Renew Request</h4>
+                                    <p class="text-sm text-gray-600">Request subscription renewal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Output Section -->
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Generated Email</h2>
+                        <div class="flex space-x-2">
+                            <button id="copySubjectBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
+                                <i class="fas fa-copy mr-1"></i> Copy Subject
+                            </button>
+                            <button id="copyBodyBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
+                                <i class="fas fa-copy mr-1"></i> Copy Body
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Subject Line</label>
+                        <div id="subjectOutput" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 font-medium"></div>
+                    </div>
+                    
+                    <div class="output-box border border-gray-300 rounded-lg p-4 md:p-6" id="outputContent">
+                        <p class="text-gray-500 text-center py-10">Your generated email will appear here</p>
+                    </div>
+                    
+                    <div class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h3 class="font-medium text-blue-800 flex items-center">
+                            <i class="fas fa-lightbulb mr-2"></i> Pro Tip
+                        </h3>
+                        <p class="text-sm text-blue-700 mt-1">Use the copy buttons to easily copy the subject and body separately for your email client.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="mt-12 text-center text-gray-600 text-sm">
+            <p>© 2023 IPTV Email Generator. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const websiteSelect = document.getElementById('website');
+            const templateSelect = document.getElementById('template');
+            const dynamicFields = document.getElementById('dynamicFields');
+            const m3uField = document.getElementById('m3uField');
+            const paymentField = document.getElementById('paymentField');
+            const paymentLinks = document.getElementById('paymentLinks');
+            const toggleLinks = document.getElementById('toggleLinks');
+            const deviceField = document.getElementById('deviceField');
+            const generateBtn = document.getElementById('generateBtn');
+            const subjectOutput = document.getElementById('subjectOutput');
+            const outputContent = document.getElementById('outputContent');
+            const copySubjectBtn = document.getElementById('copySubjectBtn');
+            const copyBodyBtn = document.getElementById('copyBodyBtn');
+            const deviceCount = document.getElementById('deviceCount');
+            const copyNotification = document.getElementById('copyNotification');
+            const notificationText = document.getElementById('notificationText');
+            
+            // Payment link visibility toggle
+            toggleLinks.addEventListener('click', function() {
+                paymentLinks.classList.toggle('hidden');
+                if (paymentLinks.classList.contains('hidden')) {
+                    toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
+                } else {
+                    toggleLinks.innerHTML = '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
+                }
+            });
+            
+            // Template change handler
+            templateSelect.addEventListener('change', function() {
+                const templateType = this.value;
+                
+                // Hide all input fields first
+                dynamicFields.classList.add('hidden');
+                m3uField.classList.add('hidden');
+                paymentField.classList.add('hidden');
+                deviceField.classList.add('hidden');
+                paymentLinks.classList.add('hidden');
+                toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
+                
+                // Show relevant input fields based on template
+                if (templateType === 'trial') {
+                    dynamicFields.classList.remove('hidden');
+                    m3uField.classList.remove('hidden');
+                } else if (templateType === 'renew-request') {
+                    dynamicFields.classList.remove('hidden');
+                    paymentField.classList.remove('hidden');
+                    deviceField.classList.remove('hidden');
+                } else if (templateType === 'renew-confirm') {
+                    // No additional fields needed
+                } else if (templateType === 'trial-spam') {
+                    // No additional fields needed
+                } else if (templateType === 'quick-renew') {
+                    // No additional fields needed
+                } else if (templateType === 'quick-renew-after-trial') {
+                    // No additional fields needed
+                }
+            });
+            
+            // Generate button handler
+            generateBtn.addEventListener('click', function() {
+                const website = websiteSelect.value;
+                const templateType = templateSelect.value;
+                
+                if (!website || !templateType) {
+                    alert('Please select both a website and a template type.');
+                    return;
+                }
+                
+                let emailContent = '';
+                let subject = '';
+                
+                if (templateType === 'trial') {
+                    const m3uUrl = document.getElementById('m3uUrl').value;
+                    if (!m3uUrl) {
+                        alert('Please enter an M3U URL for the trial template.');
+                        return;
+                    }
+                    
+                    // Parse M3U URL to extract details
+                    const urlObj = new URL(m3uUrl);
+                    const username = urlObj.searchParams.get('username');
+                    const password = urlObj.searchParams.get('password');
+                    const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                    
+                    subject = `🎉 Welcome to Your 24-Hour Free Trial with ${website}! 🎉`;
+                    
+                    emailContent = `Hello,
+Thanks for booking your 24-hour trial with ${website}! Below are your login details to get you started and enjoy endless entertainment:
+💡 VPN Recommended: Use any VPN (even a free one) to bypass geo-restrictions and stream like a pro! 😎
+🗺️ Country of Delivery: Auto / VPN whitelisted
+⏰ Expiration: 24 Hours
+
+🔑 Login Details:
+
+🌐 Profile: ${website}
+👤 Username: ${username}
+🔒 Password: ${password}
+🔗 URL: ${baseUrl}
+
+📂 M3U Link: ${m3uUrl}
+
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}
+
+📺 For IPTV Smarters App Users:
+Use the links below based on your device:
+📌 Samsung/LG TVs: http://hi-ott.me
+📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me
+
+──────────────────
+🎬 Need Help Configuring?
+Simply use any IPTV app available in your device's app store and select the connection method it supports:
+✨ Xtream Codes: Enter your Username, Password, and URL.
+✨ M3U: Simply paste the M3U Link.
+
+Basic Steps:
+1️⃣ Download an IPTV app suitable for your device.
+2️⃣ Open the app and click on "Add User" or "Add Profile."
+3️⃣ Enter the Xtream Codes details or M3U Link.
+4️⃣ Save and start watching!
+🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+⚠️ Important Tips:
+1️⃣ Connection Failed? Use a VPN to resolve geo-restriction issues.
+2️⃣ Copy Like a Pro: Ensure your URL starts with "http" (not "https"). Some apps may add the "s" automatically.
+3️⃣ Manual Entry: The Profile and URL are not clickable—copy and paste them into your IPTV app (e.g., IPTV Smarters).
+🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+💬 Need Help?
+Reply to this email or contact us via chat or WhatsApp at +1 765 244-5905
+🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+✨ Enjoy your trial! 😊
+Best regards,
+
+${website}
+${website} Team 🔥`;
+                    
+                } else if (templateType === 'renew-request') {
+                    const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
+                    if (!selectedPayment) {
+                        alert('Please select a payment option for the renew request.');
+                        return;
+                    }
+                    
+                    const months = selectedPayment.value;
+                    const devices = deviceCount.value;
+                    
+                    // Get custom links if provided
+                    let paymentLink = `${months} Months account`;
+                    const customLink = document.getElementById(`link${months}`).value;
+                    if (customLink) {
+                        paymentLink = `${months} Months Renewal: ${customLink}`;
+                    }
+                    
+                    subject = `✅ Your ${website} Renewal Request - Pass ${months}`;
+                    
+                    emailContent = `Hello,
+
+Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
+
+✅ ${months} Months Renewal link : ${paymentLink}`;
+
+                    // Add multiple devices note if applicable
+                    if (devices > 1) {
+                        emailContent += `
+
+For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
+                    }
+
+                    emailContent += `
+
+If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}.
+
+Thank you for continuing to choose ${website}. Enjoy your entertainment!
+
+Best regards,
+The ${website} Team`;
+                    
+                } else if (templateType === 'renew-confirm') {
+                    subject = `✅🎉 Account Renewal Confirmation - ${website}!`;
+                    
+                    emailContent = `Hello,
+Thank you for renewing your account with ${website}!
+Here are your updated details:
+            👤 Username:
+            📅 New Expiration Date:
+We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
+Happy Streaming! 😊
+✨ The ${website} Team ✨`;
+                
+                } else if (templateType === 'trial-spam') {
+                    subject = `Important: Trial Request Issue - ${website}`;
+                    
+                    emailContent = `Hello,
+Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.
+
+To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:
+
+👉 Request your trial again: https://www.${website}/freetrialiptv/
+
+Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.
+Thank you for helping us keep the system fair and secure!
+Best regards,
+${website}`;
+                
+                } else if (templateType === 'quick-renew') {
+                    subject = `Continue Your IPTV Experience - ${website}`;
+                    
+                    emailContent = `Hello,
+
+Your trial access lasts 24 hours from when your login details were sent.  
+
+Use this time to test the service on every device and make sure everything works smoothly before renewing.
+
+When you're ready, you can:
+
+1. Renew your subscription: Renew your account
+
+2. Request another 24-hour trial: Free Trial
+
+If you have any questions or need assistance, simply reply to this email or reach out via:
+
+Live chat: www.${website}
+
+WhatsApp: +1 765 244 5905
+
+Email: support@${website}
+
+We look forward to ensuring you have the best streaming experience.
+
+Best regards,
+www.${website}`;
+                
+                } else if (templateType === 'quick-renew-after-trial') {
+                    subject = `Make the Most of Your Trial - ${website}`;
+                    
+                    emailContent = `Hello,
+
+We have received your renewal request, but I invite you to take full advantage of your free trial for 24 hours before renewing your account.
+
+This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. 
+
+You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.
+
+Regards,
+${website} Team`;
+                }
+                
+                // Display the generated email and subject
+                subjectOutput.textContent = subject;
+                outputContent.textContent = emailContent;
+                
+                // Scroll to output
+                outputContent.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Copy subject to clipboard
+            copySubjectBtn.addEventListener('click', function() {
+                const subject = subjectOutput.textContent;
+                
+                if (!subject) {
+                    alert('Please generate an email first.');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(subject).then(function() {
+                    // Show notification
+                    notificationText.textContent = 'Subject copied to clipboard!';
+                    copyNotification.style.display = 'block';
+                    setTimeout(function() {
+                        copyNotification.style.display = 'none';
+                    }, 3000);
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy subject to clipboard.');
+                });
+            });
+            
+            // Copy body to clipboard
+            copyBodyBtn.addEventListener('click', function() {
+                const emailContent = outputContent.textContent;
+                
+                if (!emailContent || emailContent.includes('Your generated email will appear here')) {
+                    alert('Please generate an email first.');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(emailContent).then(function() {
+                    // Show notification
+                    notificationText.textContent = 'Email body copied to clipboard!';
+                    copyNotification.style.display = 'block';
+                    setTimeout(function() {
+                        copyNotification.style.display = 'none';
+                    }, 3000);
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy email body to clipboard.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
