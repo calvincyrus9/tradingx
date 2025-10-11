@@ -119,11 +119,13 @@
                         
                         <!-- Dynamic Fields -->
                         <div id="dynamicFields" class="space-y-4 p-4 bg-gray-50 rounded-lg">
+                            <!-- M3U URL Field -->
                             <div id="m3uField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">M3U URL</label>
                                 <input type="text" id="m3uUrl" placeholder="Enter M3U URL" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                             </div>
                             
+                            <!-- Payment Options -->
                             <div id="paymentField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Payment Option</label>
                                 <div class="grid grid-cols-2 gap-3">
@@ -169,6 +171,7 @@
                                 </button>
                             </div>
                             
+                            <!-- Device Count -->
                             <div id="deviceField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Number of Devices</label>
                                 <select id="deviceCount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
@@ -178,6 +181,16 @@
                                     <option value="4">4 Devices</option>
                                     <option value="5">5 Devices</option>
                                 </select>
+                            </div>
+
+                            <!-- Renew Link Fields - ALWAYS VISIBLE -->
+                            <div class="mt-4 p-4 bg-white rounded-lg border border-gray-200">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Renew Link URL</label>
+                                <input type="text" id="renewUrl" placeholder="https://example.com/renew" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm mb-3">
+                                
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Link Text (what user will see)</label>
+                                <input type="text" id="renewText" placeholder="Renew Your Account Here" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                <p class="text-xs text-gray-500 mt-2">This will replace "[Renew Your Account Here]" with a clickable link in ALL templates</p>
                             </div>
                         </div>
                         
@@ -272,6 +285,8 @@
             const deviceCount = document.getElementById('deviceCount');
             const copyNotification = document.getElementById('copyNotification');
             const notificationText = document.getElementById('notificationText');
+            const renewUrlInput = document.getElementById('renewUrl');
+            const renewTextInput = document.getElementById('renewText');
             
             // Helper function to extract website name without extension
             function getWebsiteName(fullWebsite) {
@@ -294,7 +309,6 @@
                 const templateType = this.value;
                 
                 // Hide all input fields first
-                dynamicFields.classList.add('hidden');
                 m3uField.classList.add('hidden');
                 paymentField.classList.add('hidden');
                 deviceField.classList.add('hidden');
@@ -310,13 +324,13 @@
                     paymentField.classList.remove('hidden');
                     deviceField.classList.remove('hidden');
                 } else if (templateType === 'renew-confirm') {
-                    // No additional fields needed
+                    dynamicFields.classList.remove('hidden');
                 } else if (templateType === 'trial-spam') {
-                    // No additional fields needed
+                    dynamicFields.classList.remove('hidden');
                 } else if (templateType === 'quick-renew') {
-                    // No additional fields needed
+                    dynamicFields.classList.remove('hidden');
                 } else if (templateType === 'quick-renew-after-trial') {
-                    // No additional fields needed
+                    dynamicFields.classList.remove('hidden');
                 }
             });
             
@@ -359,7 +373,7 @@ We recommend using a VPN to bypass internet provider restrictions and ensure the
 ✨ Crypto Bonus: 5% OFF every plan when paying with crypto
 
 ✨Please take the time to fully enjoy your trial.
-If you’re satisfied and want to continue, you can submit your renewal request here:
+If you're satisfied and want to continue, you can submit your renewal request here:
 👉🔗 [Renew Your Account Here]
 
 🗺️ Country: Auto / VPN whitelisted
@@ -392,15 +406,15 @@ Simply reply to this email if you have questions or need assistance setting up.
 1️⃣ Use one main player + keep a backup
 2️⃣ VPN = privacy + harder to block links
 3️⃣ URL must start with http (not https)
-4️⃣ Keep login details safe — don’t share
+4️⃣ Keep login details safe — don't share
 
 ✨ Enjoy your trial!
 ${websiteName} Team 🔥
 
-You received this email because you requested a trial on ${websiteName}. If this wasn’t you, please ignore it.
+You received this email because you requested a trial on ${websiteName}. If this wasn't you, please ignore it.
 `;
                     
-               } else if (templateType === 'renew-request') {
+                } else if (templateType === 'renew-request') {
                     const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
                     if (!selectedPayment) {
                         alert('Please select a payment option for the renew request.');
@@ -411,19 +425,25 @@ You received this email because you requested a trial on ${websiteName}. If this
                     const devices = deviceCount.value;
                     
                     // Get custom links if provided
-                    let paymentLink = `${months} Months account`;
+                    let paymentLinkText = `${months} Months account`;
                     const customLink = document.getElementById(`link${months}`).value;
-                    if (customLink) {
-                        paymentLink = `${months} Months Renewal: ${customLink}`;
-                    }
                     
                     subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                     
-                    emailContent = `Hello,
+                    if (customLink) {
+                        paymentLinkText = `[${months} Months Renewal]`;
+                        emailContent = `Hello,
 
 Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
 
-✅ ${months} Months Renewal link : ${paymentLink}`;
+✅ ${paymentLinkText}`;
+                    } else {
+                        emailContent = `Hello,
+
+Thank you for your renewal request! To complete your ${months} months subscription renewal, please visit our website:
+
+✅ [Renew Your Account Here] and select ${months} months option`;
+                    }
 
                     // Add multiple devices note if applicable
                     if (devices > 1) {
@@ -461,7 +481,7 @@ Your recent free trial request was flagged as potential spam by our system. We e
 
 To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:
 
-👉 Request your trial again: https://www.${website}/freetrialiptv/
+👉 Request your trial again: [Renew Your Account Here]
 
 Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.
 Thank you for helping us keep the system fair and secure!
@@ -479,7 +499,7 @@ Use this time to test the service on every device and make sure everything works
 
 When you're ready, you can:
 
-1. Renew your subscription: Renew your account
+1. Renew your subscription: [Renew Your Account Here]
 
 2. Request another 24-hour trial: Free Trial
 
@@ -505,15 +525,38 @@ We have received your renewal request, but I invite you to take full advantage o
 
 This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. 
 
-You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.
+You can reply to this email at any time to [Renew Your Account Here] or reapply again, but take advantage of your trial first.
 
 Regards,
 ${websiteName} Team`;
                 }
                 
-                // Display the generated email and subject
+                // --- AFTER emailContent is prepared ---
+                // Get user-specified renew link and text (if any)
+                const renewUrl = renewUrlInput.value.trim();
+                const renewText = renewTextInput.value.trim() || 'Renew Your Account Here';
+
+                // Function to replace ALL placeholders with clickable links
+                function replaceAllLinks(content, url, text) {
+                    if (url) {
+                        // Replace main renew placeholder
+                        content = content.replace(/\[Renew Your Account Here\]/g, `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #3B82F6; text-decoration: underline;">${text}</a>`);
+                        
+                        // Replace payment link placeholders like [1 Months Renewal]
+                        content = content.replace(/\[(\d+ Months Renewal)\]/g, function(match, linkText) {
+                            const customLink = document.getElementById(`link${match.match(/\d+/)[0]}`).value;
+                            return customLink ? `<a href="${customLink}" target="_blank" rel="noopener noreferrer" style="color: #3B82F6; text-decoration: underline;">${linkText}</a>` : match;
+                        });
+                    }
+                    return content;
+                }
+
+                // Replace all placeholders in the email content
+                emailContent = replaceAllLinks(emailContent, renewUrl, renewText);
+
+                // DISPLAY: show subject as text, but body as HTML so links become clickable
                 subjectOutput.textContent = subject;
-                outputContent.textContent = emailContent;
+                outputContent.innerHTML = emailContent.replace(/\n/g, '<br>'); // Convert new lines to <br> tags
                 
                 // Scroll to output
                 outputContent.scrollIntoView({ behavior: 'smooth' });
@@ -541,30 +584,51 @@ ${websiteName} Team`;
                 });
             });
             
-            // Copy body to clipboard
-            copyBodyBtn.addEventListener('click', function() {
-                const emailContent = outputContent.textContent;
+            // Copy body to clipboard (HTML aware)
+            copyBodyBtn.addEventListener('click', async function() {
+                const emailHtml = outputContent.innerHTML;
                 
-                if (!emailContent || emailContent.includes('Your generated email will appear here')) {
+                if (!emailHtml || emailHtml.includes('Your generated email will appear here')) {
                     alert('Please generate an email first.');
                     return;
                 }
-                
-                navigator.clipboard.writeText(emailContent).then(function() {
-                    // Show notification
-                    notificationText.textContent = 'Email body copied to clipboard!';
+
+                // Try to copy rich HTML to clipboard (modern browsers)
+                try {
+                    // Create a blob for text/html and text/plain fallback
+                    const blobHtml = new Blob([emailHtml], { type: 'text/html' });
+                    const blobPlain = new Blob([outputContent.textContent], { type: 'text/plain' });
+                    const clipboardItem = new ClipboardItem({
+                        'text/html': blobHtml,
+                        'text/plain': blobPlain
+                    });
+                    await navigator.clipboard.write([clipboardItem]);
+
+                    // Notification
+                    notificationText.textContent = 'Email body (HTML) copied to clipboard!';
                     copyNotification.style.display = 'block';
-                    setTimeout(function() {
-                        copyNotification.style.display = 'none';
+                    setTimeout(function() { 
+                        copyNotification.style.display = 'none'; 
                     }, 3000);
-                }).catch(function(err) {
-                    console.error('Could not copy text: ', err);
-                    alert('Failed to copy email body to clipboard.');
-                });
+                } catch (err) {
+                    // Fallback: only copy plain text if HTML copy fails
+                    try {
+                        await navigator.clipboard.writeText(outputContent.textContent);
+                        notificationText.textContent = 'Email body copied as plain text (no HTML).';
+                        copyNotification.style.display = 'block';
+                        setTimeout(function() { 
+                            copyNotification.style.display = 'none'; 
+                        }, 3000);
+                    } catch (err2) {
+                        console.error('Copy failed: ', err, err2);
+                        alert('Failed to copy email body to clipboard.');
+                    }
+                }
             });
+
+            // Show dynamic fields by default for better UX
+            dynamicFields.classList.remove('hidden');
         });
     </script>
 </body>
 </html>
-
-
