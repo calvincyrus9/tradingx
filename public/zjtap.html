@@ -97,9 +97,9 @@
                             <select id="website" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                                 <option value="">Choose a website</option>
                                 <option value="XtreamCube.com">XtreamCube.com</option>
-                                <option value="8ktv.tv">8ktv.tv</option>
-                                <option value="tvtoohigh.com">tvtoohigh.com</option>
-                                <option value="redixel.com">redixel.com</option>
+                                <option value="8KTV.tv">8ktv.tv</option>
+                                <option value="TVToohigh.com">tvtoohigh.com</option>
+                                <option value="RediXel.com">redixel.com</option>
                             </select>
                         </div>
                         
@@ -119,13 +119,11 @@
                         
                         <!-- Dynamic Fields -->
                         <div id="dynamicFields" class="space-y-4 p-4 bg-gray-50 rounded-lg">
-                            <!-- M3U URL Field -->
                             <div id="m3uField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">M3U URL</label>
                                 <input type="text" id="m3uUrl" placeholder="Enter M3U URL" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                             </div>
                             
-                            <!-- Payment Options -->
                             <div id="paymentField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Payment Option</label>
                                 <div class="grid grid-cols-2 gap-3">
@@ -171,7 +169,6 @@
                                 </button>
                             </div>
                             
-                            <!-- Device Count -->
                             <div id="deviceField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Number of Devices</label>
                                 <select id="deviceCount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
@@ -181,27 +178,6 @@
                                     <option value="4">4 Devices</option>
                                     <option value="5">5 Devices</option>
                                 </select>
-                            </div>
-
-                            <!-- Auto-Link Settings -->
-                            <div class="mt-4 p-4 bg-white rounded-lg border border-gray-200">
-                                <h3 class="font-medium text-gray-800 mb-3">Auto Link Settings</h3>
-                                
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Renew Link URL</label>
-                                    <input type="text" id="renewUrl" placeholder="https://example.com/renew" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Link Text</label>
-                                    <input type="text" id="renewText" placeholder="Renew Your Account Here" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                </div>
-
-                                <div class="flex items-center mb-2">
-                                    <input type="checkbox" id="autoDetectLinks" class="h-4 w-4 text-primary rounded" checked>
-                                    <label for="autoDetectLinks" class="ml-2 text-sm text-gray-700">Auto-detect and convert URLs to clickable links</label>
-                                </div>
-                                <p class="text-xs text-gray-500">Automatically converts all URLs (http, https) in the email to clickable links</p>
                             </div>
                         </div>
                         
@@ -266,7 +242,7 @@
                         <h3 class="font-medium text-blue-800 flex items-center">
                             <i class="fas fa-lightbulb mr-2"></i> Pro Tip
                         </h3>
-                        <p class="text-sm text-blue-700 mt-1">All URLs will be automatically converted to clickable links. Use the copy buttons to copy HTML with links.</p>
+                        <p class="text-sm text-blue-700 mt-1">Use the copy buttons to easily copy the subject and body separately for your email client.</p>
                     </div>
                 </div>
             </div>
@@ -296,32 +272,11 @@
             const deviceCount = document.getElementById('deviceCount');
             const copyNotification = document.getElementById('copyNotification');
             const notificationText = document.getElementById('notificationText');
-            const renewUrlInput = document.getElementById('renewUrl');
-            const renewTextInput = document.getElementById('renewText');
-            const autoDetectLinks = document.getElementById('autoDetectLinks');
             
             // Helper function to extract website name without extension
             function getWebsiteName(fullWebsite) {
                 if (!fullWebsite) return '';
                 return fullWebsite.split('.')[0];
-            }
-
-            // Function to automatically convert URLs to clickable links
-            function autoLink(text) {
-                if (!text) return text;
-                
-                // Regular expression to match URLs
-                const urlRegex = /(https?:\/\/[^\s]+)/g;
-                
-                return text.replace(urlRegex, function(url) {
-                    // Clean the URL and create a display text
-                    let displayText = url;
-                    if (url.length > 50) {
-                        displayText = url.substring(0, 47) + '...';
-                    }
-                    
-                    return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #3B82F6; text-decoration: underline;">${displayText}</a>`;
-                });
             }
             
             // Payment link visibility toggle
@@ -339,6 +294,7 @@
                 const templateType = this.value;
                 
                 // Hide all input fields first
+                dynamicFields.classList.add('hidden');
                 m3uField.classList.add('hidden');
                 paymentField.classList.add('hidden');
                 deviceField.classList.add('hidden');
@@ -354,13 +310,13 @@
                     paymentField.classList.remove('hidden');
                     deviceField.classList.remove('hidden');
                 } else if (templateType === 'renew-confirm') {
-                    dynamicFields.classList.remove('hidden');
+                    // No additional fields needed
                 } else if (templateType === 'trial-spam') {
-                    dynamicFields.classList.remove('hidden');
+                    // No additional fields needed
                 } else if (templateType === 'quick-renew') {
-                    dynamicFields.classList.remove('hidden');
+                    // No additional fields needed
                 } else if (templateType === 'quick-renew-after-trial') {
-                    dynamicFields.classList.remove('hidden');
+                    // No additional fields needed
                 }
             });
             
@@ -403,7 +359,7 @@ We recommend using a VPN to bypass internet provider restrictions and ensure the
 ✨ Crypto Bonus: 5% OFF every plan when paying with crypto
 
 ✨Please take the time to fully enjoy your trial.
-If you're satisfied and want to continue, you can submit your renewal request here:
+If you’re satisfied and want to continue, you can submit your renewal request here:
 👉🔗 [Renew Your Account Here]
 
 🗺️ Country: Auto / VPN whitelisted
@@ -411,7 +367,7 @@ If you're satisfied and want to continue, you can submit your renewal request he
 
 🔑 Login Details:
 
-🌐 Profile: ${website}
+🌐 Profile: ${websiteName}
 👤 Username: ${username}
 🔒 Password: ${password}
 🔗 URL: ${baseUrl}
@@ -436,15 +392,15 @@ Simply reply to this email if you have questions or need assistance setting up.
 1️⃣ Use one main player + keep a backup
 2️⃣ VPN = privacy + harder to block links
 3️⃣ URL must start with http (not https)
-4️⃣ Keep login details safe — don't share
+4️⃣ Keep login details safe — don’t share
 
 ✨ Enjoy your trial!
-${websiteName} Team 🔥
+The ${websiteName} Team 🔥
 
-You received this email because you requested a trial on ${websiteName}. If this wasn't you, please ignore it.
+You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.
 `;
                     
-                } else if (templateType === 'renew-request') {
+               } else if (templateType === 'renew-request') {
                     const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
                     if (!selectedPayment) {
                         alert('Please select a payment option for the renew request.');
@@ -455,25 +411,19 @@ You received this email because you requested a trial on ${websiteName}. If this
                     const devices = deviceCount.value;
                     
                     // Get custom links if provided
-                    let paymentLinkText = `${months} Months account`;
+                    let paymentLink = `${months} Months account`;
                     const customLink = document.getElementById(`link${months}`).value;
+                    if (customLink) {
+                        paymentLink = `${months} Months Renewal: ${customLink}`;
+                    }
                     
                     subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                     
-                    if (customLink) {
-                        paymentLinkText = `${months} Months Renewal: ${customLink}`;
-                        emailContent = `Hello,
+                    emailContent = `Hello,
 
 Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
 
-✅ ${paymentLinkText}`;
-                    } else {
-                        emailContent = `Hello,
-
-Thank you for your renewal request! To complete your ${months} months subscription renewal, please visit our website:
-
-✅ [Renew Your Account Here] and select ${months} months option`;
-                    }
+✅ ${months} Months Renewal link : ${paymentLink}`;
 
                     // Add multiple devices note if applicable
                     if (devices > 1) {
@@ -529,7 +479,7 @@ Use this time to test the service on every device and make sure everything works
 
 When you're ready, you can:
 
-1. Renew your subscription: [Renew Your Account Here]
+1. Renew your subscription: Renew your account
 
 2. Request another 24-hour trial: Free Trial
 
@@ -555,44 +505,15 @@ We have received your renewal request, but I invite you to take full advantage o
 
 This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. 
 
-You can reply to this email at any time to [Renew Your Account Here] or reapply again, but take advantage of your trial first.
+You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.
 
 Regards,
 ${websiteName} Team`;
                 }
                 
-                // --- AFTER emailContent is prepared ---
-                // Get user-specified renew link and text (if any)
-                const renewUrl = renewUrlInput.value.trim();
-                const renewText = renewTextInput.value.trim() || 'Renew Your Account Here';
-
-                // Function to replace ALL placeholders with clickable links
-                function replaceAllLinks(content, url, text) {
-                    if (url) {
-                        // Replace main renew placeholder
-                        content = content.replace(/\[Renew Your Account Here\]/g, `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #3B82F6; text-decoration: underline;">${text}</a>`);
-                        
-                        // Replace payment link placeholders
-                        content = content.replace(/\[(\d+ Months Renewal)\]/g, function(match, linkText) {
-                            const months = match.match(/\d+/)[0];
-                            const customLink = document.getElementById(`link${months}`).value;
-                            return customLink ? `<a href="${customLink}" target="_blank" rel="noopener noreferrer" style="color: #3B82F6; text-decoration: underline;">${linkText}</a>` : match;
-                        });
-                    }
-                    return content;
-                }
-
-                // Step 1: Replace custom placeholders with links
-                emailContent = replaceAllLinks(emailContent, renewUrl, renewText);
-
-                // Step 2: Auto-detect and convert ALL URLs to clickable links if enabled
-                if (autoDetectLinks.checked) {
-                    emailContent = autoLink(emailContent);
-                }
-
-                // DISPLAY: show subject as text, but body as HTML so links become clickable
+                // Display the generated email and subject
                 subjectOutput.textContent = subject;
-                outputContent.innerHTML = emailContent.replace(/\n/g, '<br>'); // Convert new lines to <br> tags
+                outputContent.textContent = emailContent;
                 
                 // Scroll to output
                 outputContent.scrollIntoView({ behavior: 'smooth' });
@@ -620,51 +541,30 @@ ${websiteName} Team`;
                 });
             });
             
-            // Copy body to clipboard (HTML aware)
-            copyBodyBtn.addEventListener('click', async function() {
-                const emailHtml = outputContent.innerHTML;
+            // Copy body to clipboard
+            copyBodyBtn.addEventListener('click', function() {
+                const emailContent = outputContent.textContent;
                 
-                if (!emailHtml || emailHtml.includes('Your generated email will appear here')) {
+                if (!emailContent || emailContent.includes('Your generated email will appear here')) {
                     alert('Please generate an email first.');
                     return;
                 }
-
-                // Try to copy rich HTML to clipboard (modern browsers)
-                try {
-                    // Create a blob for text/html and text/plain fallback
-                    const blobHtml = new Blob([emailHtml], { type: 'text/html' });
-                    const blobPlain = new Blob([outputContent.textContent], { type: 'text/plain' });
-                    const clipboardItem = new ClipboardItem({
-                        'text/html': blobHtml,
-                        'text/plain': blobPlain
-                    });
-                    await navigator.clipboard.write([clipboardItem]);
-
-                    // Notification
-                    notificationText.textContent = 'Email body (HTML) copied to clipboard!';
+                
+                navigator.clipboard.writeText(emailContent).then(function() {
+                    // Show notification
+                    notificationText.textContent = 'Email body copied to clipboard!';
                     copyNotification.style.display = 'block';
-                    setTimeout(function() { 
-                        copyNotification.style.display = 'none'; 
+                    setTimeout(function() {
+                        copyNotification.style.display = 'none';
                     }, 3000);
-                } catch (err) {
-                    // Fallback: only copy plain text if HTML copy fails
-                    try {
-                        await navigator.clipboard.writeText(outputContent.textContent);
-                        notificationText.textContent = 'Email body copied as plain text (no HTML).';
-                        copyNotification.style.display = 'block';
-                        setTimeout(function() { 
-                            copyNotification.style.display = 'none'; 
-                        }, 3000);
-                    } catch (err2) {
-                        console.error('Copy failed: ', err, err2);
-                        alert('Failed to copy email body to clipboard.');
-                    }
-                }
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy email body to clipboard.');
+                });
             });
-
-            // Show dynamic fields by default for better UX
-            dynamicFields.classList.remove('hidden');
         });
     </script>
 </body>
 </html>
+
+
