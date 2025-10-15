@@ -66,6 +66,21 @@
             display: none;
             z-index: 1000;
         }
+        .preset-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .preset-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .email-content {
+            line-height: 1.6;
+        }
+        .email-content a {
+            color: #2563EB;
+            text-decoration: underline;
+        }
         @media (max-width: 768px) {
             .flex-wrap {
                 flex-direction: column;
@@ -78,6 +93,94 @@
         <i class="fas fa-check-circle mr-2"></i> <span id="notificationText">Email content copied to clipboard!</span>
     </div>
     
+    <!-- Preset Management Modal -->
+    <div id="presetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Manage Website Presets</h3>
+                <button id="closePresetModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="font-medium text-gray-700">Saved Presets</h4>
+                    <button id="newPresetBtn" class="bg-primary hover:bg-secondary text-white py-2 px-4 rounded-lg text-sm flex items-center">
+                        <i class="fas fa-plus mr-2"></i> New Preset
+                    </button>
+                </div>
+                
+                <div id="presetsList" class="space-y-3 max-h-60 overflow-y-auto p-2">
+                    <!-- Presets will be loaded here -->
+                </div>
+            </div>
+            
+            <div id="presetForm" class="border-t pt-4 hidden">
+                <h4 class="font-medium text-gray-700 mb-3">Create/Edit Preset</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Website Name</label>
+                        <input type="text" id="presetName" placeholder="e.g., XtreamCube" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                        <input type="text" id="presetUrl" placeholder="e.g., XtreamCube.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-medium text-gray-700 mb-2">Payment Links</h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">1 Month</label>
+                                <input type="text" id="presetLink1" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">3 Months</label>
+                                <input type="text" id="presetLink3" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">6 Months</label>
+                                <input type="text" id="presetLink6" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">12 Months</label>
+                                <input type="text" id="presetLink12" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <!-- Additional payment links for up to 16 total -->
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">2 Months</label>
+                                <input type="text" id="presetLink2" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">4 Months</label>
+                                <input type="text" id="presetLink4" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">9 Months</label>
+                                <input type="text" id="presetLink9" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">24 Months</label>
+                                <input type="text" id="presetLink24" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button id="cancelPresetBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg">
+                            Cancel
+                        </button>
+                        <button id="savePresetBtn" class="bg-primary hover:bg-secondary text-white py-2 px-4 rounded-lg">
+                            Save Preset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="container mx-auto px-4">
         <header class="text-center mb-10">
             <h1 class="text-4xl font-bold text-gray-800 mb-3">IPTV Email Generator</h1>
@@ -85,21 +188,23 @@
         </header>
 
         <main class="bg-white rounded-xl shadow-xl p-6 md:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Generate Your Email</h2>
+                <button id="managePresetsBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg flex items-center">
+                    <i class="fas fa-cog mr-2"></i> Manage Presets
+                </button>
+            </div>
+            
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Input Section -->
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Generate Your Email</h2>
-                    
                     <div class="space-y-6">
                         <!-- Website Selection -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Select Website</label>
                             <select id="website" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                                 <option value="">Choose a website</option>
-                                <option value="XtreamCube.com">XtreamCube.com</option>
-                                <option value="8KTV.tv">8ktv.tv</option>
-                                <option value="TVToohigh.com">tvtoohigh.com</option>
-                                <option value="RediXel.com">redixel.com</option>
+                                <!-- Options will be populated from presets -->
                             </select>
                         </div>
                         
@@ -115,6 +220,39 @@
                                 <option value="quick-renew">Quick Renew</option>
                                 <option value="quick-renew-after-trial">Quick Renew After Trial</option>
                             </select>
+                        </div>
+                        
+                        <!-- Global Text Styling Controls -->
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <h3 class="font-medium text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-text-height mr-2"></i> Text Styling
+                            </h3>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Font Size</label>
+                                    <select id="fontSize" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="text-sm">Small</option>
+                                        <option value="text-base" selected>Normal</option>
+                                        <option value="text-lg">Large</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Line Spacing</label>
+                                    <select id="lineSpacing" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="leading-tight">Tight</option>
+                                        <option value="leading-normal" selected>Normal</option>
+                                        <option value="leading-relaxed">Relaxed</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Text Color</label>
+                                    <select id="textColor" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="text-gray-800" selected>Dark Gray</option>
+                                        <option value="text-gray-700">Medium Gray</option>
+                                        <option value="text-gray-900">Black</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Dynamic Fields -->
@@ -146,22 +284,7 @@
                                 </div>
                                 
                                 <div class="mt-4 grid grid-cols-2 gap-3 hidden" id="paymentLinks">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">1 Month Link</label>
-                                        <input type="text" id="link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">3 Months Link</label>
-                                        <input type="text" id="link3" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">6 Months Link</label>
-                                        <input type="text" id="link6" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">12 Months Link</label>
-                                        <input type="text" id="link12" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
+                                    <!-- Payment links will be populated from selected preset -->
                                 </div>
                                 
                                 <button type="button" id="toggleLinks" class="mt-3 text-sm text-primary hover:text-secondary flex items-center">
@@ -178,6 +301,48 @@
                                     <option value="4">4 Devices</option>
                                     <option value="5">5 Devices</option>
                                 </select>
+                            </div>
+                            
+                            <!-- Renew Confirm Specific Fields -->
+                            <div id="renewConfirmFields" class="hidden space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Usernames</label>
+                                    <select id="numUsernames" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="usernamesContainer">
+                                    <!-- Dynamic username fields will be added here -->
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Subscription Duration</label>
+                                    <select id="subscriptionDuration" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                        <option value="1">1 Month</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="6">6 Months</option>
+                                        <option value="12">12 Months</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="includeSecondDevice" class="h-4 w-4 text-primary">
+                                        <span class="ml-2 text-sm text-gray-700">Include 2nd Device</span>
+                                    </label>
+                                </div>
+                                
+                                <div id="secondDeviceFields" class="hidden space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Second Device M3U URL</label>
+                                        <input type="text" id="secondDeviceM3uUrl" placeholder="Enter M3U URL for second device" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -212,6 +377,30 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-check-circle text-purple-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Renew Confirm</h4>
+                                    <p class="text-sm text-gray-600">Confirm subscription renewal</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
+                            <div class="flex items-start">
+                                <div class="bg-yellow-100 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Trial Spam</h4>
+                                    <p class="text-sm text-gray-600">Address trial request issues</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -220,6 +409,9 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-2xl font-bold text-gray-800">Generated Email</h2>
                         <div class="flex space-x-2">
+                            <button id="previewToggle" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
+                                <i class="fas fa-code mr-1"></i> <span id="previewToggleText">HTML View</span>
+                            </button>
                             <button id="copySubjectBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
                                 <i class="fas fa-copy mr-1"></i> Copy Subject
                             </button>
@@ -234,7 +426,7 @@
                         <div id="subjectOutput" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 font-medium"></div>
                     </div>
                     
-                    <div class="output-box border border-gray-300 rounded-lg p-4 md:p-6" id="outputContent">
+                    <div class="output-box border border-gray-300 rounded-lg p-4 md:p-6 email-content" id="outputContent">
                         <p class="text-gray-500 text-center py-10">Your generated email will appear here</p>
                     </div>
                     
@@ -242,7 +434,7 @@
                         <h3 class="font-medium text-blue-800 flex items-center">
                             <i class="fas fa-lightbulb mr-2"></i> Pro Tip
                         </h3>
-                        <p class="text-sm text-blue-700 mt-1">Use the copy buttons to easily copy the subject and body separately for your email client.</p>
+                        <p class="text-sm text-blue-700 mt-1">Use the copy buttons to easily copy the subject and body separately for your email client. Toggle between HTML and text view as needed.</p>
                     </div>
                 </div>
             </div>
@@ -272,67 +464,378 @@
             const deviceCount = document.getElementById('deviceCount');
             const copyNotification = document.getElementById('copyNotification');
             const notificationText = document.getElementById('notificationText');
+            const managePresetsBtn = document.getElementById('managePresetsBtn');
+            const presetModal = document.getElementById('presetModal');
+            const closePresetModal = document.getElementById('closePresetModal');
+            const presetsList = document.getElementById('presetsList');
+            const presetForm = document.getElementById('presetForm');
+            const newPresetBtn = document.getElementById('newPresetBtn');
+            const cancelPresetBtn = document.getElementById('cancelPresetBtn');
+            const savePresetBtn = document.getElementById('savePresetBtn');
+            const presetName = document.getElementById('presetName');
+            const presetUrl = document.getElementById('presetUrl');
+            const renewConfirmFields = document.getElementById('renewConfirmFields');
+            const numUsernames = document.getElementById('numUsernames');
+            const usernamesContainer = document.getElementById('usernamesContainer');
+            const subscriptionDuration = document.getElementById('subscriptionDuration');
+            const includeSecondDevice = document.getElementById('includeSecondDevice');
+            const secondDeviceFields = document.getElementById('secondDeviceFields');
+            const previewToggle = document.getElementById('previewToggle');
+            const previewToggleText = document.getElementById('previewToggleText');
             
-            // Helper function to extract website name without extension
-            function getWebsiteName(fullWebsite) {
-                if (!fullWebsite) return '';
-                return fullWebsite.split('.')[0];
+            // Global text styling controls
+            const fontSize = document.getElementById('fontSize');
+            const lineSpacing = document.getElementById('lineSpacing');
+            const textColor = document.getElementById('textColor');
+            
+            // State variables
+            let presets = JSON.parse(localStorage.getItem('iptvPresets')) || [];
+            let editingPresetId = null;
+            let isHtmlView = true;
+            
+            // Initialize the application
+            function init() {
+                loadPresets();
+                updateWebsiteDropdown();
+                setupEventListeners();
+                
+                // Add default presets if none exist
+                if (presets.length === 0) {
+                    createDefaultPresets();
+                }
             }
             
-            // Payment link visibility toggle
-            toggleLinks.addEventListener('click', function() {
-                paymentLinks.classList.toggle('hidden');
-                if (paymentLinks.classList.contains('hidden')) {
+            // Create default presets
+            function createDefaultPresets() {
+                const defaultPresets = [
+                    {
+                        id: generateId(),
+                        name: 'XtreamCube',
+                        url: 'XtreamCube.com',
+                        links: {
+                            '1': '',
+                            '2': '',
+                            '3': '',
+                            '4': '',
+                            '6': '',
+                            '9': '',
+                            '12': '',
+                            '24': ''
+                        }
+                    },
+                    {
+                        id: generateId(),
+                        name: '8KTV',
+                        url: '8ktv.tv',
+                        links: {
+                            '1': '',
+                            '2': '',
+                            '3': '',
+                            '4': '',
+                            '6': '',
+                            '9': '',
+                            '12': '',
+                            '24': ''
+                        }
+                    },
+                    {
+                        id: generateId(),
+                        name: 'TVTooHigh',
+                        url: 'tvtoohigh.com',
+                        links: {
+                            '1': '',
+                            '2': '',
+                            '3': '',
+                            '4': '',
+                            '6': '',
+                            '9': '',
+                            '12': '',
+                            '24': ''
+                        }
+                    },
+                    {
+                        id: generateId(),
+                        name: 'RediXel',
+                        url: 'redixel.com',
+                        links: {
+                            '1': '',
+                            '2': '',
+                            '3': '',
+                            '4': '',
+                            '6': '',
+                            '9': '',
+                            '12': '',
+                            '24': ''
+                        }
+                    }
+                ];
+                
+                presets = defaultPresets;
+                savePresets();
+                updateWebsiteDropdown();
+            }
+            
+            // Generate a unique ID
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+            
+            // Load presets from localStorage
+            function loadPresets() {
+                const savedPresets = localStorage.getItem('iptvPresets');
+                if (savedPresets) {
+                    presets = JSON.parse(savedPresets);
+                }
+            }
+            
+            // Save presets to localStorage
+            function savePresets() {
+                localStorage.setItem('iptvPresets', JSON.stringify(presets));
+            }
+            
+            // Update website dropdown with presets
+            function updateWebsiteDropdown() {
+                websiteSelect.innerHTML = '<option value="">Choose a website</option>';
+                
+                presets.forEach(preset => {
+                    const option = document.createElement('option');
+                    option.value = preset.id;
+                    option.textContent = `${preset.name} (${preset.url})`;
+                    websiteSelect.appendChild(option);
+                });
+            }
+            
+            // Get preset by ID
+            function getPresetById(id) {
+                return presets.find(preset => preset.id === id);
+            }
+            
+            // Update payment links UI based on selected preset
+            function updatePaymentLinks(presetId) {
+                const preset = getPresetById(presetId);
+                if (!preset) return;
+                
+                paymentLinks.innerHTML = '';
+                
+                // Create input fields for each payment duration
+                Object.keys(preset.links).forEach(duration => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <label class="block text-xs text-gray-600 mb-1">${duration} Month${duration !== '1' ? 's' : ''} Link</label>
+                        <input type="text" id="link${duration}" value="${preset.links[duration]}" placeholder="Payment link" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    `;
+                    paymentLinks.appendChild(div);
+                });
+            }
+            
+            // Setup event listeners
+            function setupEventListeners() {
+                // Payment link visibility toggle
+                toggleLinks.addEventListener('click', function() {
+                    paymentLinks.classList.toggle('hidden');
+                    if (paymentLinks.classList.contains('hidden')) {
+                        toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
+                    } else {
+                        toggleLinks.innerHTML = '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
+                    }
+                });
+                
+                // Template change handler
+                templateSelect.addEventListener('change', function() {
+                    const templateType = this.value;
+                    
+                    // Hide all input fields first
+                    dynamicFields.classList.add('hidden');
+                    m3uField.classList.add('hidden');
+                    paymentField.classList.add('hidden');
+                    deviceField.classList.add('hidden');
+                    renewConfirmFields.classList.add('hidden');
+                    paymentLinks.classList.add('hidden');
                     toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
-                } else {
-                    toggleLinks.innerHTML = '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
-                }
-            });
-            
-            // Template change handler
-            templateSelect.addEventListener('change', function() {
-                const templateType = this.value;
+                    
+                    // Show relevant input fields based on template
+                    if (templateType === 'trial') {
+                        dynamicFields.classList.remove('hidden');
+                        m3uField.classList.remove('hidden');
+                    } else if (templateType === 'renew-request') {
+                        dynamicFields.classList.remove('hidden');
+                        paymentField.classList.remove('hidden');
+                        deviceField.classList.remove('hidden');
+                    } else if (templateType === 'renew-confirm') {
+                        dynamicFields.classList.remove('hidden');
+                        renewConfirmFields.classList.remove('hidden');
+                        generateUsernameFields(1); // Default to 1 username
+                    } else if (templateType === 'trial-spam') {
+                        // No additional fields needed
+                    } else if (templateType === 'quick-renew') {
+                        // No additional fields needed
+                    } else if (templateType === 'quick-renew-after-trial') {
+                        // No additional fields needed
+                    }
+                });
                 
-                // Hide all input fields first
-                dynamicFields.classList.add('hidden');
-                m3uField.classList.add('hidden');
-                paymentField.classList.add('hidden');
-                deviceField.classList.add('hidden');
-                paymentLinks.classList.add('hidden');
-                toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
+                // Website change handler
+                websiteSelect.addEventListener('change', function() {
+                    const presetId = this.value;
+                    if (presetId) {
+                        updatePaymentLinks(presetId);
+                    }
+                });
                 
-                // Show relevant input fields based on template
-                if (templateType === 'trial') {
-                    dynamicFields.classList.remove('hidden');
-                    m3uField.classList.remove('hidden');
-                } else if (templateType === 'renew-request') {
-                    dynamicFields.classList.remove('hidden');
-                    paymentField.classList.remove('hidden');
-                    deviceField.classList.remove('hidden');
-                } else if (templateType === 'renew-confirm') {
-                    // No additional fields needed
-                } else if (templateType === 'trial-spam') {
-                    // No additional fields needed
-                } else if (templateType === 'quick-renew') {
-                    // No additional fields needed
-                } else if (templateType === 'quick-renew-after-trial') {
-                    // No additional fields needed
-                }
-            });
+                // Number of usernames change handler
+                numUsernames.addEventListener('change', function() {
+                    generateUsernameFields(parseInt(this.value));
+                });
+                
+                // Include second device checkbox handler
+                includeSecondDevice.addEventListener('change', function() {
+                    if (this.checked) {
+                        secondDeviceFields.classList.remove('hidden');
+                    } else {
+                        secondDeviceFields.classList.add('hidden');
+                    }
+                });
+                
+                // Preview toggle handler
+                previewToggle.addEventListener('click', function() {
+                    isHtmlView = !isHtmlView;
+                    previewToggleText.textContent = isHtmlView ? 'HTML View' : 'Text View';
+                    
+                    // If there's content in the output, re-render it in the selected view
+                    if (outputContent.textContent && !outputContent.textContent.includes('Your generated email will appear here')) {
+                        // This would require storing both HTML and text versions
+                        // For now, we'll just toggle a class that affects rendering
+                        if (isHtmlView) {
+                            outputContent.classList.add('email-content');
+                        } else {
+                            outputContent.classList.remove('email-content');
+                        }
+                    }
+                });
+                
+                // Generate button handler
+                generateBtn.addEventListener('click', generateEmail);
+                
+                // Copy subject to clipboard
+                copySubjectBtn.addEventListener('click', function() {
+                    const subject = subjectOutput.textContent;
+                    
+                    if (!subject) {
+                        alert('Please generate an email first.');
+                        return;
+                    }
+                    
+                    navigator.clipboard.writeText(subject).then(function() {
+                        showNotification('Subject copied to clipboard!');
+                    }).catch(function(err) {
+                        console.error('Could not copy text: ', err);
+                        alert('Failed to copy subject to clipboard.');
+                    });
+                });
+                
+                // Copy body to clipboard
+                copyBodyBtn.addEventListener('click', function() {
+                    let emailContent;
+                    
+                    if (isHtmlView) {
+                        // Get HTML content
+                        emailContent = outputContent.innerHTML;
+                        
+                        // Create a temporary element to get the text content
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = emailContent;
+                        emailContent = tempDiv.textContent || tempDiv.innerText || '';
+                    } else {
+                        // Get text content
+                        emailContent = outputContent.textContent;
+                    }
+                    
+                    if (!emailContent || emailContent.includes('Your generated email will appear here')) {
+                        alert('Please generate an email first.');
+                        return;
+                    }
+                    
+                    navigator.clipboard.writeText(emailContent).then(function() {
+                        showNotification('Email body copied to clipboard!');
+                    }).catch(function(err) {
+                        console.error('Could not copy text: ', err);
+                        alert('Failed to copy email body to clipboard.');
+                    });
+                });
+                
+                // Preset management
+                managePresetsBtn.addEventListener('click', function() {
+                    presetModal.classList.remove('hidden');
+                    renderPresetsList();
+                });
+                
+                closePresetModal.addEventListener('click', function() {
+                    presetModal.classList.add('hidden');
+                    resetPresetForm();
+                });
+                
+                newPresetBtn.addEventListener('click', function() {
+                    presetForm.classList.remove('hidden');
+                    editingPresetId = null;
+                    resetPresetForm();
+                });
+                
+                cancelPresetBtn.addEventListener('click', function() {
+                    presetForm.classList.add('hidden');
+                    resetPresetForm();
+                });
+                
+                savePresetBtn.addEventListener('click', savePreset);
+            }
             
-            // Generate button handler
-            generateBtn.addEventListener('click', function() {
-                const website = websiteSelect.value;
+            // Generate username fields based on count
+            function generateUsernameFields(count) {
+                usernamesContainer.innerHTML = '';
+                
+                for (let i = 1; i <= count; i++) {
+                    const div = document.createElement('div');
+                    div.classList.add('grid', 'grid-cols-2', 'gap-3');
+                    div.innerHTML = `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Username ${i}</label>
+                            <input type="text" id="username${i}" placeholder="Enter username" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Password ${i}</label>
+                            <input type="text" id="password${i}" placeholder="Enter password" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                        </div>
+                    `;
+                    usernamesContainer.appendChild(div);
+                }
+            }
+            
+            // Calculate expiration date based on duration
+            function calculateExpiration(durationMonths) {
+                const today = new Date();
+                today.setMonth(today.getMonth() + parseInt(durationMonths));
+                return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            
+            // Generate email based on selected template and inputs
+            function generateEmail() {
+                const presetId = websiteSelect.value;
                 const templateType = templateSelect.value;
-                const websiteName = getWebsiteName(website);
+                const preset = getPresetById(presetId);
                 
-                if (!website || !templateType) {
+                if (!preset || !templateType) {
                     alert('Please select both a website and a template type.');
                     return;
                 }
                 
+                const websiteName = preset.name;
+                const websiteUrl = preset.url;
+                
                 let emailContent = '';
                 let subject = '';
+                
+                // Apply text styling
+                const textStyle = `${fontSize.value} ${lineSpacing.value} ${textColor.value}`;
+                outputContent.className = `output-box border border-gray-300 rounded-lg p-4 md:p-6 email-content ${textStyle}`;
                 
                 if (templateType === 'trial') {
                     const m3uUrl = document.getElementById('m3uUrl').value;
@@ -359,8 +862,8 @@ We recommend using a VPN to bypass internet provider restrictions and ensure the
 ✨ Crypto Bonus: 5% OFF every plan when paying with crypto
 
 ✨Please take the time to fully enjoy your trial.
-If you’re satisfied and want to continue, you can submit your renewal request here:
-👉🔗 [Renew Your Account Here]
+If you're satisfied and want to continue, you can submit your renewal request here:
+👉🔗 <a href="https://${websiteUrl}/renew" target="_blank">Renew Your Account Here</a>
 
 🗺️ Country: Auto / VPN whitelisted
 ⏰ Expiration: 24h from email time
@@ -392,15 +895,15 @@ Simply reply to this email if you have questions or need assistance setting up.
 1️⃣ Use one main player + keep a backup
 2️⃣ VPN = privacy + harder to block links
 3️⃣ URL must start with http (not https)
-4️⃣ Keep login details safe — don’t share
+4️⃣ Keep login details safe — don't share
 
 ✨ Enjoy your trial!
 The ${websiteName} Team 🔥
 
-You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.
+You received this email because you requested a trial on ${websiteUrl}. If this wasn't you, please ignore it.
 `;
                     
-               } else if (templateType === 'renew-request') {
+                } else if (templateType === 'renew-request') {
                     const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
                     if (!selectedPayment) {
                         alert('Please select a payment option for the renew request.');
@@ -410,12 +913,8 @@ You received this email because you requested a trial on ${website}. If this was
                     const months = selectedPayment.value;
                     const devices = deviceCount.value;
                     
-                    // Get custom links if provided
-                    let paymentLink = `${months} Months account`;
-                    const customLink = document.getElementById(`link${months}`).value;
-                    if (customLink) {
-                        paymentLink = `${months} Months Renewal: ${customLink}`;
-                    }
+                    // Get the payment link from the preset
+                    const paymentLink = preset.links[months] || `${months} Months account`;
                     
                     subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                     
@@ -423,7 +922,15 @@ You received this email because you requested a trial on ${website}. If this was
 
 Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
 
-✅ ${months} Months Renewal link : ${paymentLink}`;
+✅ <a href="${paymentLink}" target="_blank">${months} Months Renewal</a>`;
+
+                    // Add all available payment links
+                    emailContent += `\n\nOther available renewal options:\n`;
+                    Object.keys(preset.links).forEach(duration => {
+                        if (preset.links[duration]) {
+                            emailContent += `• <a href="${preset.links[duration]}" target="_blank">${duration} Month${duration !== '1' ? 's' : ''} Renewal</a>\n`;
+                        }
+                    });
 
                     // Add multiple devices note if applicable
                     if (devices > 1) {
@@ -434,7 +941,7 @@ For multiple devices, please adjust the quantity at checkout to receive a 15% di
 
                     emailContent += `
 
-If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}.
+If you encounter any issues or have questions, feel free to reach out to us via live chat at: <a href="https://www.${websiteUrl}" target="_blank">www.${websiteUrl}</a>.
 
 Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 
@@ -442,14 +949,71 @@ Best regards,
 The ${websiteName} Team`;
                     
                 } else if (templateType === 'renew-confirm') {
+                    const numUsers = parseInt(numUsernames.value);
+                    const duration = subscriptionDuration.value;
+                    const expirationDate = calculateExpiration(duration);
+                    const includeSecondDeviceChecked = includeSecondDevice.checked;
+                    
+                    // Validate username fields
+                    let valid = true;
+                    for (let i = 1; i <= numUsers; i++) {
+                        const username = document.getElementById(`username${i}`).value;
+                        const password = document.getElementById(`password${i}`).value;
+                        if (!username || !password) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (!valid) {
+                        alert('Please fill in all username and password fields.');
+                        return;
+                    }
+                    
                     subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
                     
                     emailContent = `Hello,
+
 Thank you for renewing your account with ${websiteName}!
-Here are your updated details:
-            👤 Username:
-            📅 New Expiration Date:
+Here are your updated details:`;
+
+                    // Add primary account details
+                    for (let i = 1; i <= numUsers; i++) {
+                        const username = document.getElementById(`username${i}`).value;
+                        const password = document.getElementById(`password${i}`).value;
+                        
+                        emailContent += `
+👤 Username ${numUsers > 1 ? i : ''}: ${username}
+🔒 Password ${numUsers > 1 ? i : ''}: ${password}`;
+                    }
+                    
+                    emailContent += `
+📅 New Expiration Date: ${expirationDate}`;
+                    
+                    // Add second device details if requested
+                    if (includeSecondDeviceChecked) {
+                        const secondDeviceM3uUrl = document.getElementById('secondDeviceM3uUrl').value;
+                        if (secondDeviceM3uUrl) {
+                            const urlObj = new URL(secondDeviceM3uUrl);
+                            const username = urlObj.searchParams.get('username');
+                            const password = urlObj.searchParams.get('password');
+                            const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                            
+                            emailContent += `
+
+📱 Second Device Login Details:
+👤 Username: ${username}
+🔒 Password: ${password}
+🔗 URL: ${baseUrl}
+📂 M3U Link: ${secondDeviceM3uUrl}
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}`;
+                        }
+                    }
+                    
+                    emailContent += `
+
 We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
+
 Happy Streaming! 😊
 ✨ The ${websiteName} Team ✨`;
                 
@@ -461,7 +1025,7 @@ Your recent free trial request was flagged as potential spam by our system. We e
 
 To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:
 
-👉 Request your trial again: https://www.${website}/freetrialiptv/
+👉 Request your trial again: <a href="https://www.${websiteUrl}/freetrialiptv/" target="_blank">https://www.${websiteUrl}/freetrialiptv/</a>
 
 Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.
 Thank you for helping us keep the system fair and secure!
@@ -479,22 +1043,22 @@ Use this time to test the service on every device and make sure everything works
 
 When you're ready, you can:
 
-1. Renew your subscription: Renew your account
+1. Renew your subscription: <a href="https://${websiteUrl}/renew" target="_blank">Renew your account</a>
 
-2. Request another 24-hour trial: Free Trial
+2. Request another 24-hour trial: <a href="https://${websiteUrl}/freetrial" target="_blank">Free Trial</a>
 
 If you have any questions or need assistance, simply reply to this email or reach out via:
 
-Live chat: www.${website}
+Live chat: <a href="https://www.${websiteUrl}" target="_blank">www.${websiteUrl}</a>
 
 WhatsApp: +1 765 244 5905
 
-Email: support@${website}
+Email: support@${websiteUrl}
 
 We look forward to ensuring you have the best streaming experience.
 
 Best regards,
-www.${websiteName}`;
+<a href="https://www.${websiteUrl}" target="_blank">www.${websiteName}</a>`;
                 
                 } else if (templateType === 'quick-renew-after-trial') {
                     subject = `Make the Most of Your Trial - ${websiteName}`;
@@ -513,58 +1077,154 @@ ${websiteName} Team`;
                 
                 // Display the generated email and subject
                 subjectOutput.textContent = subject;
-                outputContent.textContent = emailContent;
+                outputContent.innerHTML = emailContent;
                 
                 // Scroll to output
                 outputContent.scrollIntoView({ behavior: 'smooth' });
-            });
+            }
             
-            // Copy subject to clipboard
-            copySubjectBtn.addEventListener('click', function() {
-                const subject = subjectOutput.textContent;
+            // Preset management functions
+            function renderPresetsList() {
+                presetsList.innerHTML = '';
                 
-                if (!subject) {
-                    alert('Please generate an email first.');
+                if (presets.length === 0) {
+                    presetsList.innerHTML = '<p class="text-gray-500 text-center py-4">No presets saved yet.</p>';
                     return;
                 }
                 
-                navigator.clipboard.writeText(subject).then(function() {
-                    // Show notification
-                    notificationText.textContent = 'Subject copied to clipboard!';
-                    copyNotification.style.display = 'block';
-                    setTimeout(function() {
-                        copyNotification.style.display = 'none';
-                    }, 3000);
-                }).catch(function(err) {
-                    console.error('Could not copy text: ', err);
-                    alert('Failed to copy subject to clipboard.');
+                presets.forEach(preset => {
+                    const div = document.createElement('div');
+                    div.className = 'preset-card p-3 border border-gray-200 rounded-lg bg-white flex justify-between items-center';
+                    div.innerHTML = `
+                        <div>
+                            <h4 class="font-medium text-gray-800">${preset.name}</h4>
+                            <p class="text-sm text-gray-600">${preset.url}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="edit-preset text-blue-600 hover:text-blue-800" data-id="${preset.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-preset text-red-600 hover:text-red-800" data-id="${preset.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    presetsList.appendChild(div);
                 });
-            });
-            
-            // Copy body to clipboard
-            copyBodyBtn.addEventListener('click', function() {
-                const emailContent = outputContent.textContent;
                 
-                if (!emailContent || emailContent.includes('Your generated email will appear here')) {
-                    alert('Please generate an email first.');
+                // Add event listeners to edit and delete buttons
+                document.querySelectorAll('.edit-preset').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const presetId = this.getAttribute('data-id');
+                        editPreset(presetId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-preset').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const presetId = this.getAttribute('data-id');
+                        deletePreset(presetId);
+                    });
+                });
+            }
+            
+            function editPreset(presetId) {
+                const preset = getPresetById(presetId);
+                if (!preset) return;
+                
+                presetForm.classList.remove('hidden');
+                editingPresetId = presetId;
+                
+                presetName.value = preset.name;
+                presetUrl.value = preset.url;
+                
+                // Set payment link values
+                Object.keys(preset.links).forEach(duration => {
+                    const input = document.getElementById(`presetLink${duration}`);
+                    if (input) {
+                        input.value = preset.links[duration] || '';
+                    }
+                });
+            }
+            
+            function deletePreset(presetId) {
+                if (confirm('Are you sure you want to delete this preset?')) {
+                    presets = presets.filter(preset => preset.id !== presetId);
+                    savePresets();
+                    updateWebsiteDropdown();
+                    renderPresetsList();
+                }
+            }
+            
+            function savePreset() {
+                const name = presetName.value.trim();
+                const url = presetUrl.value.trim();
+                
+                if (!name || !url) {
+                    alert('Please enter both a name and URL for the preset.');
                     return;
                 }
                 
-                navigator.clipboard.writeText(emailContent).then(function() {
-                    // Show notification
-                    notificationText.textContent = 'Email body copied to clipboard!';
-                    copyNotification.style.display = 'block';
-                    setTimeout(function() {
-                        copyNotification.style.display = 'none';
-                    }, 3000);
-                }).catch(function(err) {
-                    console.error('Could not copy text: ', err);
-                    alert('Failed to copy email body to clipboard.');
+                // Collect payment links
+                const links = {};
+                const durations = ['1', '2', '3', '4', '6', '9', '12', '24'];
+                durations.forEach(duration => {
+                    const input = document.getElementById(`presetLink${duration}`);
+                    links[duration] = input ? input.value.trim() : '';
                 });
-            });
+                
+                if (editingPresetId) {
+                    // Update existing preset
+                    const index = presets.findIndex(preset => preset.id === editingPresetId);
+                    if (index !== -1) {
+                        presets[index].name = name;
+                        presets[index].url = url;
+                        presets[index].links = links;
+                    }
+                } else {
+                    // Create new preset
+                    presets.push({
+                        id: generateId(),
+                        name,
+                        url,
+                        links
+                    });
+                }
+                
+                savePresets();
+                updateWebsiteDropdown();
+                renderPresetsList();
+                presetForm.classList.add('hidden');
+                resetPresetForm();
+            }
+            
+            function resetPresetForm() {
+                presetName.value = '';
+                presetUrl.value = '';
+                
+                // Reset payment link inputs
+                const durations = ['1', '2', '3', '4', '6', '9', '12', '24'];
+                durations.forEach(duration => {
+                    const input = document.getElementById(`presetLink${duration}`);
+                    if (input) {
+                        input.value = '';
+                    }
+                });
+                
+                editingPresetId = null;
+            }
+            
+            function showNotification(message) {
+                notificationText.textContent = message;
+                copyNotification.style.display = 'block';
+                setTimeout(function() {
+                    copyNotification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Initialize the application
+            init();
         });
     </script>
 </body>
 </html>
-
-
