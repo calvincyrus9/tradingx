@@ -948,74 +948,109 @@ Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 Best regards,
 The ${websiteName} Team`;
                     
-                } else if (templateType === 'renew-confirm') {
-                    const numUsers = parseInt(numUsernames.value);
-                    const duration = subscriptionDuration.value;
-                    const expirationDate = calculateExpiration(duration);
-                    const includeSecondDeviceChecked = includeSecondDevice.checked;
-                    
-                    // Validate username fields
-                    let valid = true;
-                    for (let i = 1; i <= numUsers; i++) {
-                        const username = document.getElementById(`username${i}`).value;
-                        const password = document.getElementById(`password${i}`).value;
-                        if (!username || !password) {
-                            valid = false;
-                            break;
-                        }
-                    }
-                    
-                    if (!valid) {
-                        alert('Please fill in all username and password fields.');
-                        return;
-                    }
-                    
-                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                    
-                    emailContent = `Hello,
+                } // === Helper function to calculate numeric expiration date ===
+function calculateExpiration(duration) {
+    const today = new Date();
+    let monthsToAdd = 0;
+
+    switch (duration) {
+        case '1':
+        case '1M':
+            monthsToAdd = 1;
+            break;
+        case '3':
+        case '3M':
+            monthsToAdd = 3;
+            break;
+        case '6':
+        case '6M':
+            monthsToAdd = 6;
+            break;
+        case '12':
+        case '12M':
+            monthsToAdd = 12;
+            break;
+        default:
+            monthsToAdd = parseInt(duration) || 1;
+    }
+
+    today.setMonth(today.getMonth() + monthsToAdd);
+
+    // Format as DD-MM-YYYY
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
+// === Renew Confirm Template ===
+else if (templateType === 'renew-confirm') {
+    const numUsers = parseInt(numUsernames.value);
+    const duration = subscriptionDuration.value;
+    const expirationDate = calculateExpiration(duration);
+    const includeSecondDeviceChecked = includeSecondDevice.checked;
+
+    // Validate username fields
+    let valid = true;
+    for (let i = 1; i <= numUsers; i++) {
+        const username = document.getElementById(`username${i}`).value;
+        if (!username) {
+            valid = false;
+            break;
+        }
+    }
+
+    if (!valid) {
+        alert('Please fill in all username fields.');
+        return;
+    }
+
+    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
+
+    // === Email Body Construction ===
+    emailContent = `Hello,
 
 Thank you for renewing your account with ${websiteName}!
-Here are your updated details:`;
+Here are your updated details:
+`;
 
-                    // Add primary account details
-                    for (let i = 1; i <= numUsers; i++) {
-                        const username = document.getElementById(`username${i}`).value;
-                        const password = document.getElementById(`password${i}`).value;
-                        
-                        emailContent += `
-👤 Username ${numUsers > 1 ? i : ''}: ${username}
-🔒 Password ${numUsers > 1 ? i : ''}: ${password}`;
-                    }
-                    
-                    emailContent += `
-📅 New Expiration Date: ${expirationDate}`;
-                    
-                    // Add second device details if requested
-                    if (includeSecondDeviceChecked) {
-                        const secondDeviceM3uUrl = document.getElementById('secondDeviceM3uUrl').value;
-                        if (secondDeviceM3uUrl) {
-                            const urlObj = new URL(secondDeviceM3uUrl);
-                            const username = urlObj.searchParams.get('username');
-                            const password = urlObj.searchParams.get('password');
-                            const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
-                            
-                            emailContent += `
+    // Add all usernames
+    for (let i = 1; i <= numUsers; i++) {
+        const username = document.getElementById(`username${i}`).value;
+        emailContent += `👤 Username${numUsers > 1 ? ' ' + i : ''}: ${username}\n`;
+    }
 
+    // Add expiration date (numeric format)
+    emailContent += `📅 New Expiration Date: ${expirationDate}\n`;
+
+    // Add second device login details if enabled
+    if (includeSecondDeviceChecked) {
+        const secondDeviceM3uUrl = document.getElementById('secondDeviceM3uUrl').value;
+        if (secondDeviceM3uUrl) {
+            const urlObj = new URL(secondDeviceM3uUrl);
+            const username = urlObj.searchParams.get('username');
+            const password = urlObj.searchParams.get('password');
+            const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+
+            emailContent += `
 📱 Second Device Login Details:
 👤 Username: ${username}
 🔒 Password: ${password}
 🔗 URL: ${baseUrl}
 📂 M3U Link: ${secondDeviceM3uUrl}
-🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}`;
-                        }
-                    }
-                    
-                    emailContent += `
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}\n`;
+        }
+    }
 
-We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
+    // Closing section
+    emailContent += `
+We're excited to have you continue streaming with us! 
+If you have any questions or need assistance, feel free to reach out to our support team.
 
 Happy Streaming! 😊
 ✨ The ${websiteName} Team ✨`;
+}
+
                 
                 } else if (templateType === 'trial-spam') {
                     subject = `Important: Trial Request Issue - ${websiteName}`;
@@ -1228,3 +1263,4 @@ ${websiteName} Team`;
     </script>
 </body>
 </html>
+
