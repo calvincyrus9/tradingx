@@ -492,6 +492,8 @@
             let presets = JSON.parse(localStorage.getItem('iptvPresets')) || [];
             let editingPresetId = null;
             let isHtmlView = true;
+            let currentEmailHTML = '';
+            let currentEmailText = '';
             
             // Initialize the application
             function init() {
@@ -701,15 +703,13 @@
                     isHtmlView = !isHtmlView;
                     previewToggleText.textContent = isHtmlView ? 'HTML View' : 'Text View';
                     
-                    // If there's content in the output, re-render it in the selected view
-                    if (outputContent.textContent && !outputContent.textContent.includes('Your generated email will appear here')) {
-                        // This would require storing both HTML and text versions
-                        // For now, we'll just toggle a class that affects rendering
-                        if (isHtmlView) {
-                            outputContent.classList.add('email-content');
-                        } else {
-                            outputContent.classList.remove('email-content');
-                        }
+                    // Update the display based on the current view
+                    if (isHtmlView) {
+                        outputContent.innerHTML = currentEmailHTML;
+                        outputContent.classList.add('email-content');
+                    } else {
+                        outputContent.textContent = currentEmailText;
+                        outputContent.classList.remove('email-content');
                     }
                 });
                 
@@ -733,34 +733,28 @@
                     });
                 });
                 
-                // Copy body to clipboard
+                // Copy body to clipboard - FIXED VERSION
                 copyBodyBtn.addEventListener('click', function() {
-                    let emailContent;
-                    
-                    if (isHtmlView) {
-                        // Get HTML content
-                        emailContent = outputContent.innerHTML;
-                        
-                        // Create a temporary element to get the text content
-                        const tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = emailContent;
-                        emailContent = tempDiv.textContent || tempDiv.innerText || '';
-                    } else {
-                        // Get text content
-                        emailContent = outputContent.textContent;
-                    }
-                    
-                    if (!emailContent || emailContent.includes('Your generated email will appear here')) {
+                    if (!currentEmailHTML || outputContent.textContent.includes('Your generated email will appear here')) {
                         alert('Please generate an email first.');
                         return;
                     }
                     
-                    navigator.clipboard.writeText(emailContent).then(function() {
+                    // Create a temporary textarea to copy HTML content
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = isHtmlView ? currentEmailHTML : currentEmailText;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    
+                    try {
+                        document.execCommand('copy');
                         showNotification('Email body copied to clipboard!');
-                    }).catch(function(err) {
+                    } catch (err) {
                         console.error('Could not copy text: ', err);
                         alert('Failed to copy email body to clipboard.');
-                    });
+                    }
+                    
+                    document.body.removeChild(tempTextArea);
                 });
                 
                 // Preset management
@@ -815,41 +809,7 @@
                 today.setMonth(today.getMonth() + parseInt(durationMonths));
                 return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             }
-            // === Helper function to calculate numeric expiration date ===
-function calculateExpiration(duration) {
-    const today = new Date();
-    let monthsToAdd = 0;
-
-    switch (duration) {
-        case '1':
-        case '1M':
-            monthsToAdd = 1;
-            break;
-        case '3':
-        case '3M':
-            monthsToAdd = 3;
-            break;
-        case '6':
-        case '6M':
-            monthsToAdd = 6;
-            break;
-        case '12':
-        case '12M':
-            monthsToAdd = 12;
-            break;
-        default:
-            monthsToAdd = parseInt(duration) || 1;
-    }
-
-    today.setMonth(today.getMonth() + monthsToAdd);
-
-    // Format as DD-MM-YYYY
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    return `${day}-${month}-${year}`;
-}
-
+            
             // Generate email based on selected template and inputs
             function generateEmail() {
                 const presetId = websiteSelect.value;
@@ -864,7 +824,8 @@ function calculateExpiration(duration) {
                 const websiteName = preset.name;
                 const websiteUrl = preset.url;
                 
-                let emailContent = '';
+                let emailContentHTML = '';
+                let emailContentText = '';
                 let subject = '';
                 
                 // Apply text styling
@@ -886,7 +847,8 @@ function calculateExpiration(duration) {
                     
                     subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
                     
-                    emailContent = `Hi,
+                    // HTML version with clickable links
+                    emailContentHTML = `Hi,
 
 Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.
 We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.
@@ -898,6 +860,58 @@ We recommend using a VPN to bypass internet provider restrictions and ensure the
 ✨Please take the time to fully enjoy your trial.
 If you're satisfied and want to continue, you can submit your renewal request here:
 👉🔗 <a href="https://${websiteUrl}/renew" target="_blank">Renew Your Account Here</a>
+
+🗺️ Country: Auto / VPN whitelisted
+⏰ Expiration: 24h from email time
+
+🔑 Login Details:
+
+🌐 Profile: ${websiteName}
+👤 Username: ${username}
+🔒 Password: ${password}
+🔗 URL: ${baseUrl}
+
+📂 M3U Link: ${m3uUrl}
+
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}
+
+⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.
+
+📺 For IPTV Smarters App Users:
+Use the links below based on your device:
+📌 Samsung/LG TVs: http://hi-ott.me
+📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me
+
+⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.
+
+❓💬 Need Help?
+Simply reply to this email if you have questions or need assistance setting up.
+
+💡 Tips for the Best Experience
+1️⃣ Use one main player + keep a backup
+2️⃣ VPN = privacy + harder to block links
+3️⃣ URL must start with http (not https)
+4️⃣ Keep login details safe — don't share
+
+✨ Enjoy your trial!
+The ${websiteName} Team 🔥
+
+You received this email because you requested a trial on ${websiteUrl}. If this wasn't you, please ignore it.
+`;
+                    
+                    // Text version without HTML tags
+                    emailContentText = `Hi,
+
+Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.
+We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.
+
+🎉 Special Promos
+✨ Multi-Device Deal: 15% OFF on all additional devices
+✨ Crypto Bonus: 5% OFF every plan when paying with crypto
+
+✨Please take the time to fully enjoy your trial.
+If you're satisfied and want to continue, you can submit your renewal request here:
+👉🔗 Renew Your Account Here: https://${websiteUrl}/renew
 
 🗺️ Country: Auto / VPN whitelisted
 ⏰ Expiration: 24h from email time
@@ -952,28 +966,48 @@ You received this email because you requested a trial on ${websiteUrl}. If this 
                     
                     subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                     
-                    emailContent = `Hello,
+                    // HTML version with clickable links
+                    emailContentHTML = `Hello,
 
 Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
 
 ✅ <a href="${paymentLink}" target="_blank">${months} Months Renewal</a>`;
 
                     // Add all available payment links
-                    emailContent += `\n\nOther available renewal options:\n`;
+                    emailContentHTML += `\n\nOther available renewal options:\n`;
                     Object.keys(preset.links).forEach(duration => {
                         if (preset.links[duration]) {
-                            emailContent += `• <a href="${preset.links[duration]}" target="_blank">${duration} Month${duration !== '1' ? 's' : ''} Renewal</a>\n`;
+                            emailContentHTML += `• <a href="${preset.links[duration]}" target="_blank">${duration} Month${duration !== '1' ? 's' : ''} Renewal</a>\n`;
+                        }
+                    });
+
+                    // Text version without HTML tags
+                    emailContentText = `Hello,
+
+Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:
+
+✅ ${months} Months Renewal: ${paymentLink}`;
+
+                    // Add all available payment links for text version
+                    emailContentText += `\n\nOther available renewal options:\n`;
+                    Object.keys(preset.links).forEach(duration => {
+                        if (preset.links[duration]) {
+                            emailContentText += `• ${duration} Month${duration !== '1' ? 's' : ''} Renewal: ${preset.links[duration]}\n`;
                         }
                     });
 
                     // Add multiple devices note if applicable
                     if (devices > 1) {
-                        emailContent += `
+                        emailContentHTML += `
+
+For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
+                        
+                        emailContentText += `
 
 For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
                     }
 
-                    emailContent += `
+                    emailContentHTML += `
 
 If you encounter any issues or have questions, feel free to reach out to us via live chat at: <a href="https://www.${websiteUrl}" target="_blank">www.${websiteUrl}</a>.
 
@@ -982,80 +1016,118 @@ Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 Best regards,
 The ${websiteName} Team`;
                     
-                } 
-// === Renew Confirm Template ===
-else if (templateType === 'renew-confirm') {
-    const numUsers = parseInt(numUsernames.value);
-    const duration = subscriptionDuration.value;
-    const expirationDate = calculateExpiration(duration);
-    const includeSecondDeviceChecked = includeSecondDevice.checked;
+                    emailContentText += `
 
-    // Validate username fields
-    let valid = true;
-    for (let i = 1; i <= numUsers; i++) {
-        const username = document.getElementById(`username${i}`).value;
-        if (!username) {
-            valid = false;
-            break;
-        }
-    }
+If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${websiteUrl}.
 
-    if (!valid) {
-        alert('Please fill in all username fields.');
-        return;
-    }
+Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!
 
-    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-
-    // === Email Body Construction ===
-    emailContent = `Hello,
+Best regards,
+The ${websiteName} Team`;
+                    
+                } else if (templateType === 'renew-confirm') {
+                    const numUsers = parseInt(numUsernames.value);
+                    const duration = subscriptionDuration.value;
+                    const expirationDate = calculateExpiration(duration);
+                    const includeSecondDeviceChecked = includeSecondDevice.checked;
+                    
+                    // Validate username fields
+                    let valid = true;
+                    for (let i = 1; i <= numUsers; i++) {
+                        const username = document.getElementById(`username${i}`).value;
+                        const password = document.getElementById(`password${i}`).value;
+                        if (!username || !password) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (!valid) {
+                        alert('Please fill in all username and password fields.');
+                        return;
+                    }
+                    
+                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
+                    
+                    // Both HTML and text versions are similar for this template
+                    emailContentHTML = `Hello,
 
 Thank you for renewing your account with ${websiteName}!
-Here are your updated details:
-`;
+Here are your updated details:`;
 
-    // Add all usernames
-    for (let i = 1; i <= numUsers; i++) {
-        const username = document.getElementById(`username${i}`).value;
-        emailContent += `👤 Username${numUsers > 1 ? ' ' + i : ''}: ${username}\n`;
-    }
+                    emailContentText = `Hello,
 
-    // Add expiration date (numeric format)
-    emailContent += `📅 New Expiration Date: ${expirationDate}\n`;
+Thank you for renewing your account with ${websiteName}!
+Here are your updated details:`;
 
-    // Add second device login details if enabled
-    if (includeSecondDeviceChecked) {
-        const secondDeviceM3uUrl = document.getElementById('secondDeviceM3uUrl').value;
-        if (secondDeviceM3uUrl) {
-            const urlObj = new URL(secondDeviceM3uUrl);
-            const username = urlObj.searchParams.get('username');
-            const password = urlObj.searchParams.get('password');
-            const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                    // Add primary account details
+                    for (let i = 1; i <= numUsers; i++) {
+                        const username = document.getElementById(`username${i}`).value;
+                        const password = document.getElementById(`password${i}`).value;
+                        
+                        emailContentHTML += `
+👤 Username ${numUsers > 1 ? i : ''}: ${username}
+🔒 Password ${numUsers > 1 ? i : ''}: ${password}`;
+                        
+                        emailContentText += `
+👤 Username ${numUsers > 1 ? i : ''}: ${username}
+🔒 Password ${numUsers > 1 ? i : ''}: ${password}`;
+                    }
+                    
+                    emailContentHTML += `
+📅 New Expiration Date: ${expirationDate}`;
+                    
+                    emailContentText += `
+📅 New Expiration Date: ${expirationDate}`;
+                    
+                    // Add second device details if requested
+                    if (includeSecondDeviceChecked) {
+                        const secondDeviceM3uUrl = document.getElementById('secondDeviceM3uUrl').value;
+                        if (secondDeviceM3uUrl) {
+                            const urlObj = new URL(secondDeviceM3uUrl);
+                            const username = urlObj.searchParams.get('username');
+                            const password = urlObj.searchParams.get('password');
+                            const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                            
+                            emailContentHTML += `
 
-            emailContent += `
 📱 Second Device Login Details:
 👤 Username: ${username}
 🔒 Password: ${password}
 🔗 URL: ${baseUrl}
 📂 M3U Link: ${secondDeviceM3uUrl}
-🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}\n`;
-        }
-    }
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}`;
+                            
+                            emailContentText += `
 
-    // Closing section
-    emailContent += `
-We're excited to have you continue streaming with us! 
-If you have any questions or need assistance, feel free to reach out to our support team.
+📱 Second Device Login Details:
+👤 Username: ${username}
+🔒 Password: ${password}
+🔗 URL: ${baseUrl}
+📂 M3U Link: ${secondDeviceM3uUrl}
+🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}`;
+                        }
+                    }
+                    
+                    emailContentHTML += `
+
+We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
 
 Happy Streaming! 😊
 ✨ The ${websiteName} Team ✨`;
-}
+                    
+                    emailContentText += `
 
+We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.
+
+Happy Streaming! 😊
+✨ The ${websiteName} Team ✨`;
                 
                 } else if (templateType === 'trial-spam') {
                     subject = `Important: Trial Request Issue - ${websiteName}`;
                     
-                    emailContent = `Hello,
+                    // HTML version
+                    emailContentHTML = `Hello,
 Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.
 
 To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:
@@ -1066,11 +1138,25 @@ Once we receive your new request, I'll activate your trial immediately. If you s
 Thank you for helping us keep the system fair and secure!
 Best regards,
 ${websiteName}`;
+                    
+                    // Text version
+                    emailContentText = `Hello,
+Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.
+
+To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:
+
+👉 Request your trial again: https://www.${websiteUrl}/freetrialiptv/
+
+Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.
+Thank you for helping us keep the system fair and secure!
+Best regards,
+${websiteName}`;
                 
                 } else if (templateType === 'quick-renew') {
                     subject = `Continue Your IPTV Experience - ${websiteName}`;
                     
-                    emailContent = `Hello,
+                    // HTML version
+                    emailContentHTML = `Hello,
 
 Your trial access lasts 24 hours from when your login details were sent.  
 
@@ -1094,11 +1180,49 @@ We look forward to ensuring you have the best streaming experience.
 
 Best regards,
 <a href="https://www.${websiteUrl}" target="_blank">www.${websiteName}</a>`;
+                    
+                    // Text version
+                    emailContentText = `Hello,
+
+Your trial access lasts 24 hours from when your login details were sent.  
+
+Use this time to test the service on every device and make sure everything works smoothly before renewing.
+
+When you're ready, you can:
+
+1. Renew your subscription: https://${websiteUrl}/renew
+
+2. Request another 24-hour trial: https://${websiteUrl}/freetrial
+
+If you have any questions or need assistance, simply reply to this email or reach out via:
+
+Live chat: www.${websiteUrl}
+
+WhatsApp: +1 765 244 5905
+
+Email: support@${websiteUrl}
+
+We look forward to ensuring you have the best streaming experience.
+
+Best regards,
+www.${websiteName}`;
                 
                 } else if (templateType === 'quick-renew-after-trial') {
                     subject = `Make the Most of Your Trial - ${websiteName}`;
                     
-                    emailContent = `Hello,
+                    // Both versions are the same for this template
+                    emailContentHTML = `Hello,
+
+We have received your renewal request, but I invite you to take full advantage of your free trial for 24 hours before renewing your account.
+
+This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. 
+
+You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.
+
+Regards,
+${websiteName} Team`;
+                    
+                    emailContentText = `Hello,
 
 We have received your renewal request, but I invite you to take full advantage of your free trial for 24 hours before renewing your account.
 
@@ -1110,9 +1234,21 @@ Regards,
 ${websiteName} Team`;
                 }
                 
+                // Store both HTML and text versions
+                currentEmailHTML = emailContentHTML;
+                currentEmailText = emailContentText;
+                
                 // Display the generated email and subject
                 subjectOutput.textContent = subject;
-                outputContent.innerHTML = emailContent;
+                
+                // Set the output based on current view
+                if (isHtmlView) {
+                    outputContent.innerHTML = currentEmailHTML;
+                    outputContent.classList.add('email-content');
+                } else {
+                    outputContent.textContent = currentEmailText;
+                    outputContent.classList.remove('email-content');
+                }
                 
                 // Scroll to output
                 outputContent.scrollIntoView({ behavior: 'smooth' });
@@ -1263,5 +1399,3 @@ ${websiteName} Team`;
     </script>
 </body>
 </html>
-
-
