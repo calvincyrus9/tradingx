@@ -39,7 +39,7 @@
             min-height: 400px;
             max-height: 500px;
             overflow-y: auto;
-            white-space: normal; /* Changed from pre-wrap */
+            white-space: normal;
             background: #f8fafc;
         }
         .btn {
@@ -47,12 +47,6 @@
         }
         .btn:hover {
             transform: translateY(-2px);
-        }
-        .highlight {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3B82F6;
-            padding: 0.5rem 1rem;
-            margin: 0.5rem 0;
         }
         .copy-notification {
             position: fixed;
@@ -325,6 +319,15 @@
                     return;
                 }
                 
+                // NEW CODE: Define the specific renewal link paths for each website
+                const renewalLinkPaths = {
+                    'XtreamCube.com': 'renew',
+                    '8KTV.tv': '8ktv-renew-your-account', // <-- CHANGE THIS to the correct path for 8ktv.tv
+                    'TVToohigh.com': 'renewal-request', // <-- CHANGE THIS to the correct path for tvtoohigh.com
+                    'RediXel.com': 'renewal.html'      // <-- CHANGE THIS to the correct path for redixel.com
+                };
+                const renewalPath = renewalLinkPaths[website] || 'my-account'; // Default to 'my-account' if not found
+
                 let emailContent = '';
                 let subject = '';
                 
@@ -342,7 +345,8 @@
                     
                     subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
                     
-                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/my-account/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don’t share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.</i>`;
+                    // UPDATED LINE: Uses the new 'renewalPath' variable
+                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don’t share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.</i>`;
                     
                } else if (templateType === 'renew-request') {
                     const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
@@ -360,7 +364,6 @@
                     if (customLink) {
                         paymentLinkHTML = `<a href="${customLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:bold;">✅ ${months} Months Renewal</a>`;
                     } else {
-                        // Create a generic link if a custom one isn't provided.
                         const genericLink = `https://www.${website}/checkout?plan=${months}`;
                         paymentLinkHTML = `<a href="${genericLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:bold;">✅ ${months} Months account</a>`;
                     }
@@ -385,7 +388,9 @@
                 
                 } else if (templateType === 'quick-renew') {
                     subject = `Continue Your IPTV Experience - ${websiteName}`;
-                    emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent.  <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/Renew/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
+
+                    // UPDATED LINE: Uses the new 'renewalPath' variable
+                    emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent.  <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
                 
                 } else if (templateType === 'quick-renew-after-trial') {
                     subject = `Make the Most of Your Trial - ${websiteName}`;
@@ -427,7 +432,6 @@
                     return;
                 }
 
-                // Use the Clipboard API to copy HTML content
                 navigator.clipboard.write([
                     new ClipboardItem({
                         'text/html': new Blob([htmlContent], { type: 'text/html' }),
@@ -441,7 +445,6 @@
                     }, 3000);
                 }).catch(function(err) {
                     console.error('Could not copy rich text: ', err);
-                    // Fallback for browsers that might not support it
                     navigator.clipboard.writeText(textContent).then(() => {
                         notificationText.textContent = 'Email body copied as plain text.';
                         copyNotification.style.display = 'block';
