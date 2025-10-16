@@ -263,6 +263,12 @@
             return fullWebsite ? fullWebsite.split('.')[0] : '';
         }
 
+        function calculateExpirationDate(months) {
+            const today = new Date();
+            today.setMonth(today.getMonth() + parseInt(months));
+            return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
         toggleLinks.addEventListener('click', function() {
             paymentLinks.classList.toggle('hidden');
             this.innerHTML = paymentLinks.classList.contains('hidden') ? '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links' : '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
@@ -322,7 +328,7 @@
                     const renewalPath = renewalLinkPaths[website] || 'my-account';
                     
                     subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
-                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don’t share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.</i>`;
+                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you're satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don't share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn't you, please ignore it.</i>`;
                 } catch (error) {
                     alert('Invalid M3U URL provided. Please check the format and try again.');
                     return;
@@ -349,19 +355,29 @@
                 }
                 emailContent += `<br><br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}<br><br>Thank you for continuing to choose ${websiteName}.<br>Enjoy your entertainment!<br><br>Best regards,<br>The ${websiteName} Team`;
 
-                } const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
-const userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br><br>');
+            } else if (templateType === 'renew-confirm') {
+                const usernamesInput = document.getElementById('usernames').value;
+                const expirationPlan = document.getElementById('expirationPlan').value;
+                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
+                
+                if (!usernamesInput.trim()) {
+                    alert('Please enter at least one username.');
+                    return;
+                }
 
-subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
+                const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
+                const calculatedExpirationDate = calculateExpirationDate(expirationPlan);
+                const userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br><br>');
 
-emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
+                subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
 
-if (includeNote) {
-    emailContent += `<br><br>Your additional device connections have also been renewed.`;
-}
+                emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We're excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
 
-emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
+                if (includeNote) {
+                    emailContent += `<br><br>Your additional device connections have also been renewed.`;
+                }
 
+                emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
 
             } else if (templateType === 'trial-spam') {
                 subject = `Important: Trial Request Issue - ${websiteName}`;
@@ -388,16 +404,24 @@ emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team �
                 alert('Please generate an email first.');
                 return;
             }
-            navigator.clipboard.write([
-                new ClipboardItem({
-                    'text/html': new Blob([htmlContent], { type: 'text/html' }),
-                    'text/plain': new Blob([textContent], { type: 'text/plain' })
-                })
-            ]).then(() => {
+            
+            // Create a temporary textarea for plain text copying
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
                 notificationText.textContent = 'Formatted email body copied!';
                 copyNotification.style.display = 'block';
                 setTimeout(() => { copyNotification.style.display = 'none'; }, 3000);
-            }).catch(err => console.error('Could not copy rich text: ', err));
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy email body to clipboard.');
+            }
+            
+            document.body.removeChild(tempTextArea);
         }
 
         copySubjectBtn.addEventListener('click', () => {
