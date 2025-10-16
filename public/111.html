@@ -368,7 +368,7 @@
                 let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
                 
                 subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
+                emailContent = `Hello,<br><brThank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br><br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
                 
                 if (includeNote) {
                     emailContent += `<br><br>Your additional device connections have also been renewed.`;
