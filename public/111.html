@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="mt-4 grid grid-cols-2 gap-3 hidden" id="paymentLinks">
+                                <div class="mt-4 hidden" id="paymentLinks">
                                     <div id="mainPaymentLinks">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div><label class="block text-sm font-medium text-gray-700 mb-2">1 Month Main Link</label><input type="text" id="main_link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
@@ -266,7 +266,10 @@
         function calculateExpirationDate(months) {
             const today = new Date();
             today.setMonth(today.getMonth() + parseInt(months));
-            return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         toggleLinks.addEventListener('click', function() {
@@ -346,7 +349,7 @@
                 const defaultLink = paymentLinksData[website]?.[linkType]?.[months] || '#';
                 const finalLink = customLink || defaultLink;
                 
-                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#16A34A; text-decoration:underline; font-weight:600;">${months} Months account</a>`;
+                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:600;">${months} Months account</a>`;
 
                 subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                 emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:<br><br>✅ ${months} Months Renewal: ${paymentLinkHTML}`;
@@ -367,16 +370,14 @@
 
                 const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
                 const calculatedExpirationDate = calculateExpirationDate(expirationPlan);
-                const userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br><br>');
+                const userDetailsHTML = usernames.map(u => `👤 Username: <b>${u.trim()}</b>`).join('<br>');
 
                 subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-
-                emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We're excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
+                emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: <b>${calculatedExpirationDate}</b><br><br>We're excited to have you continue streaming with us! <br><br>If you need anything, like troubleshooting, device setup help or just have a question, you can:<br><br>Reply to this email<br>Chat with us at: <a href="https://www.${website}" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}</a><br>Message us on WhatsApp at +1 765-244-5905`;
 
                 if (includeNote) {
                     emailContent += `<br><br>Your additional device connections have also been renewed.`;
                 }
-
                 emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
 
             } else if (templateType === 'trial-spam') {
@@ -386,7 +387,7 @@
             } else if (templateType === 'quick-renew') {
                 const renewalPath = renewalLinkPaths[website] || 'my-account';
                 subject = `Continue Your IPTV Experience - ${websiteName}`;
-                emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent.  <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
+                emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent. <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
                 
             } else if (templateType === 'quick-renew-after-trial') {
                 subject = `Make the Most of Your Trial - ${websiteName}`;
@@ -404,24 +405,21 @@
                 alert('Please generate an email first.');
                 return;
             }
-            
-            // Create a temporary textarea for plain text copying
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            
-            try {
-                document.execCommand('copy');
+
+            // Use the modern Clipboard API to copy HTML content
+            navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': new Blob([htmlContent], { type: 'text/html' }),
+                    'text/plain': new Blob([textContent], { type: 'text/plain' })
+                })
+            ]).then(() => {
                 notificationText.textContent = 'Formatted email body copied!';
                 copyNotification.style.display = 'block';
                 setTimeout(() => { copyNotification.style.display = 'none'; }, 3000);
-            } catch (err) {
-                console.error('Could not copy text: ', err);
-                alert('Failed to copy email body to clipboard.');
-            }
-            
-            document.body.removeChild(tempTextArea);
+            }).catch(err => {
+                console.error('Could not copy rich text: ', err);
+                alert('Failed to copy email body.');
+            });
         }
 
         copySubjectBtn.addEventListener('click', () => {
