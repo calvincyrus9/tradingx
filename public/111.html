@@ -113,94 +113,71 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">M3U URL</label>
                                 <input type="text" id="m3uUrl" placeholder="Enter M3U URL" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                             </div>
+
+                            <div id="renewConfirmField" class="hidden space-y-4">
+                                <div>
+                                    <label for="usernames" class="block text-sm font-medium text-gray-700 mb-2">Username(s) (one per line)</label>
+                                    <textarea id="usernames" rows="3" placeholder="user123&#10;user456" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"></textarea>
+                                </div>
+                                <div>
+                                    <label for="expirationDate" class="block text-sm font-medium text-gray-700 mb-2">New Expiration Date</label>
+                                    <input type="date" id="expirationDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" id="includeMultiDeviceNote" class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
+                                        <span class="ml-2 text-sm text-gray-700">Include note for additional devices</span>
+                                    </label>
+                                </div>
+                            </div>
                             
                             <div id="paymentField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Payment Option</label>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="paymentOption" value="1" class="h-4 w-4 text-primary">
-                                        <span class="ml-2">1 Month</span>
-                                    </label>
-                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="paymentOption" value="3" class="h-4 w-4 text-primary">
-                                        <span class="ml-2">3 Months</span>
-                                    </label>
-                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="paymentOption" value="6" class="h-4 w-4 text-primary">
-                                        <span class="ml-2">6 Months</span>
-                                    </label>
-                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="paymentOption" value="12" class="h-4 w-4 text-primary">
-                                        <span class="ml-2">12 Months</span>
-                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="paymentOption" value="1" class="h-4 w-4 text-primary"><span class="ml-2">1 Month</span></label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="paymentOption" value="3" class="h-4 w-4 text-primary"><span class="ml-2">3 Months</span></label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="paymentOption" value="6" class="h-4 w-4 text-primary"><span class="ml-2">6 Months</span></label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="paymentOption" value="12" class="h-4 w-4 text-primary"><span class="ml-2">12 Months</span></label>
+                                </div>
+                                
+                                <div id="linkTypeField" class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Link Type</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="linkTypeOption" value="main" class="h-4 w-4 text-primary" checked><span class="ml-2">Main Links</span></label>
+                                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="linkTypeOption" value="cap" class="h-4 w-4 text-primary"><span class="ml-2">Cap Links</span></label>
+                                    </div>
                                 </div>
                                 
                                 <div class="mt-4 grid grid-cols-2 gap-3 hidden" id="paymentLinks">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">1 Month Link</label>
-                                        <input type="text" id="link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    <div id="mainPaymentLinks">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">1 Month Main Link</label><input type="text" id="main_link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">3 Months Main Link</label><input type="text" id="main_link3" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">6 Months Main Link</label><input type="text" id="main_link6" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">12 Months Main Link</label><input type="text" id="main_link12" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">3 Months Link</label>
-                                        <input type="text" id="link3" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">6 Months Link</label>
-                                        <input type="text" id="link6" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">12 Months Link</label>
-                                        <input type="text" id="link12" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm">
+                                    <div id="capPaymentLinks" class="hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">1 Month Cap Link</label><input type="text" id="cap_link1" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">3 Months Cap Link</label><input type="text" id="cap_link3" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">6 Months Cap Link</label><input type="text" id="cap_link6" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                            <div><label class="block text-sm font-medium text-gray-700 mb-2">12 Months Cap Link</label><input type="text" id="cap_link12" placeholder="Payment link" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm"></div>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <button type="button" id="toggleLinks" class="mt-3 text-sm text-primary hover:text-secondary flex items-center">
-                                    <i class="fas fa-plus-circle mr-1"></i> Add custom payment links
-                                </button>
+                                <button type="button" id="toggleLinks" class="mt-3 text-sm text-primary hover:text-secondary flex items-center"><i class="fas fa-plus-circle mr-1"></i> Add custom payment links</button>
                             </div>
                             
                             <div id="deviceField" class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Number of Devices</label>
                                 <select id="deviceCount" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                    <option value="1">1 Device</option>
-                                    <option value="2">2 Devices</option>
-                                    <option value="3">3 Devices</option>
-                                    <option value="4">4 Devices</option>
-                                    <option value="5">5 Devices</option>
+                                    <option value="1">1 Device</option><option value="2">2 Devices</option><option value="3">3 Devices</option><option value="4">4 Devices</option><option value="5">5 Devices</option>
                                 </select>
                             </div>
                         </div>
                         
-                        <button id="generateBtn" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center">
-                            <i class="fas fa-envelope mr-2"></i> Generate Email
-                        </button>
-                    </div>
-                    
-                    <h3 class="text-xl font-semibold text-gray-800 mt-10 mb-4">Available Templates</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
-                            <div class="flex items-start">
-                                <div class="bg-blue-100 p-2 rounded-lg mr-3">
-                                    <i class="fas fa-ticket-alt text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">Free Trial</h4>
-                                    <p class="text-sm text-gray-600">Send trial account details</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="template-card p-4 border border-gray-200 rounded-lg bg-white">
-                            <div class="flex items-start">
-                                <div class="bg-green-100 p-2 rounded-lg mr-3">
-                                    <i class="fas fa-sync-alt text-green-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">Renew Request</h4>
-                                    <p class="text-sm text-gray-600">Request subscription renewal</p>
-                                </div>
-                            </div>
-                        </div>
+                        <button id="generateBtn" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center"><i class="fas fa-envelope mr-2"></i> Generate Email</button>
                     </div>
                 </div>
                 
@@ -208,12 +185,8 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-2xl font-bold text-gray-800">Generated Email</h2>
                         <div class="flex space-x-2">
-                            <button id="copySubjectBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
-                                <i class="fas fa-copy mr-1"></i> Copy Subject
-                            </button>
-                            <button id="copyBodyBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm">
-                                <i class="fas fa-copy mr-1"></i> Copy Body
-                            </button>
+                            <button id="copySubjectBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm"><i class="fas fa-copy mr-1"></i> Copy Subject</button>
+                            <button id="copyBodyBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg flex items-center text-sm"><i class="fas fa-copy mr-1"></i> Copy Body</button>
                         </div>
                     </div>
                     
@@ -225,239 +198,217 @@
                     <div class="output-box border border-gray-300 rounded-lg p-4 md:p-6" id="outputContent">
                         <p class="text-gray-500 text-center py-10">Your generated email will appear here</p>
                     </div>
-                    
-                    <div class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
-                        <h3 class="font-medium text-blue-800 flex items-center">
-                            <i class="fas fa-lightbulb mr-2"></i> Pro Tip
-                        </h3>
-                        <p class="text-sm text-blue-700 mt-1">Use the 'Copy Body' button to copy the formatted email. Pasting into Gmail, Outlook, etc., will keep the links and line breaks.</p>
-                    </div>
                 </div>
             </div>
         </main>
-        
-        <footer class="mt-12 text-center text-gray-600 text-sm">
-            <p>© 2023 IPTV Email Generator. All rights reserved.</p>
-        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const websiteSelect = document.getElementById('website');
-            const templateSelect = document.getElementById('template');
-            const dynamicFields = document.getElementById('dynamicFields');
-            const m3uField = document.getElementById('m3uField');
-            const paymentField = document.getElementById('paymentField');
-            const paymentLinks = document.getElementById('paymentLinks');
-            const toggleLinks = document.getElementById('toggleLinks');
-            const deviceField = document.getElementById('deviceField');
-            const generateBtn = document.getElementById('generateBtn');
-            const subjectOutput = document.getElementById('subjectOutput');
-            const outputContent = document.getElementById('outputContent');
-            const copySubjectBtn = document.getElementById('copySubjectBtn');
-            const copyBodyBtn = document.getElementById('copyBodyBtn');
-            const deviceCount = document.getElementById('deviceCount');
-            const copyNotification = document.getElementById('copyNotification');
-            const notificationText = document.getElementById('notificationText');
-            
-            // Helper function to extract website name without extension
-            function getWebsiteName(fullWebsite) {
-                if (!fullWebsite) return '';
-                return fullWebsite.split('.')[0];
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const websiteSelect = document.getElementById('website');
+        const templateSelect = document.getElementById('template');
+        const dynamicFields = document.getElementById('dynamicFields');
+        const m3uField = document.getElementById('m3uField');
+        const paymentField = document.getElementById('paymentField');
+        const paymentLinks = document.getElementById('paymentLinks');
+        const toggleLinks = document.getElementById('toggleLinks');
+        const deviceField = document.getElementById('deviceField');
+        const generateBtn = document.getElementById('generateBtn');
+        const subjectOutput = document.getElementById('subjectOutput');
+        const outputContent = document.getElementById('outputContent');
+        const copySubjectBtn = document.getElementById('copySubjectBtn');
+        const copyBodyBtn = document.getElementById('copyBodyBtn');
+        const deviceCount = document.getElementById('deviceCount');
+        const copyNotification = document.getElementById('copyNotification');
+        const notificationText = document.getElementById('notificationText');
+        const linkTypeRadios = document.querySelectorAll('input[name="linkTypeOption"]');
+        const mainPaymentLinks = document.getElementById('mainPaymentLinks');
+        const capPaymentLinks = document.getElementById('capPaymentLinks');
+        const renewConfirmField = document.getElementById('renewConfirmField');
+
+        // --- DATA ---
+        const renewalLinkPaths = {
+            'XtreamCube.com': 'renew',
+            '8KTV.tv': '8ktv-renew-your-account',
+            'TVToohigh.com': 'renewal-request',
+            'RediXel.com': 'renewal.html'
+        };
+        
+        // **IMPORTANT**: Edit these placeholder links with your actual payment URLs
+        const paymentLinksData = {
+            'XtreamCube.com': {
+                main: {'1': 'https://mjstore.sell.app/product/xc-pass-001',
+                       '3': 'https://mjstore.sell.app/product/xc-pass3', 
+                       '6': 'https://mjstore.sell.app/product/xc-pass6', 
+                       '12': 'https://mjstore.sell.app/product/xc-pass12'},
+                cap: {'1': '#', '3': '#', '6': '#', '12': '#'}
+            },
+            '8KTV.tv': {
+                main: {'1': '#', '3': '#', '6': '#', '12': '#'},
+                cap: {'1': '#', '3': '#', '6': '#', '12': '#'}
+            },
+            'TVToohigh.com': {
+                main: {'1': '#', '3': '#', '6': '#', '12': '#'},
+                cap: {'1': '#', '3': '#', '6': '#', '12': '#'}
+            },
+            'RediXel.com': {
+                main: {'1': '#', '3': '#', '6': '#', '12': '#'},
+                cap: {'1': '#', '3': '#', '6': '#', '12': '#'}
             }
-            
-            // Payment link visibility toggle
-            toggleLinks.addEventListener('click', function() {
-                paymentLinks.classList.toggle('hidden');
-                if (paymentLinks.classList.contains('hidden')) {
-                    toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
+        };
+
+        function getWebsiteName(fullWebsite) {
+            return fullWebsite ? fullWebsite.split('.')[0] : '';
+        }
+
+        toggleLinks.addEventListener('click', function() {
+            paymentLinks.classList.toggle('hidden');
+            this.innerHTML = paymentLinks.classList.contains('hidden') ? '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links' : '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
+        });
+
+        linkTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'main') {
+                    mainPaymentLinks.classList.remove('hidden');
+                    capPaymentLinks.classList.add('hidden');
                 } else {
-                    toggleLinks.innerHTML = '<i class="fas fa-minus-circle mr-1"></i> Hide payment links';
+                    mainPaymentLinks.classList.add('hidden');
+                    capPaymentLinks.classList.remove('hidden');
                 }
-            });
-            
-            // Template change handler
-            templateSelect.addEventListener('change', function() {
-                const templateType = this.value;
-                
-                // Hide all input fields first
-                dynamicFields.classList.add('hidden');
-                m3uField.classList.add('hidden');
-                paymentField.classList.add('hidden');
-                deviceField.classList.add('hidden');
-                paymentLinks.classList.add('hidden');
-                toggleLinks.innerHTML = '<i class="fas fa-plus-circle mr-1"></i> Add custom payment links';
-                
-                // Show relevant input fields based on template
-                if (templateType === 'trial') {
-                    dynamicFields.classList.remove('hidden');
-                    m3uField.classList.remove('hidden');
-                } else if (templateType === 'renew-request') {
-                    dynamicFields.classList.remove('hidden');
-                    paymentField.classList.remove('hidden');
-                    deviceField.classList.remove('hidden');
-                } else if (templateType === 'renew-confirm') {
-                    // No additional fields needed
-                } else if (templateType === 'trial-spam') {
-                    // No additional fields needed
-                } else if (templateType === 'quick-renew') {
-                    // No additional fields needed
-                } else if (templateType === 'quick-renew-after-trial') {
-                    // No additional fields needed
-                }
-            });
-            
-            // Generate button handler
-            generateBtn.addEventListener('click', function() {
-                const website = websiteSelect.value;
-                const templateType = templateSelect.value;
-                const websiteName = getWebsiteName(website);
-                
-                if (!website || !templateType) {
-                    alert('Please select both a website and a template type.');
-                    return;
-                }
-                
-                // NEW CODE: Define the specific renewal link paths for each website
-                const renewalLinkPaths = {
-                    'XtreamCube.com': 'renew',
-                    '8KTV.tv': '8ktv-renew-your-account', // <-- CHANGE THIS to the correct path for 8ktv.tv
-                    'TVToohigh.com': 'renewal-request', // <-- CHANGE THIS to the correct path for tvtoohigh.com
-                    'RediXel.com': 'renewal.html'      // <-- CHANGE THIS to the correct path for redixel.com
-                };
-                const renewalPath = renewalLinkPaths[website] || 'my-account'; // Default to 'my-account' if not found
-
-                let emailContent = '';
-                let subject = '';
-                
-                if (templateType === 'trial') {
-                    const m3uUrl = document.getElementById('m3uUrl').value;
-                    if (!m3uUrl) {
-                        alert('Please enter an M3U URL for the trial template.');
-                        return;
-                    }
-                    
-                    const urlObj = new URL(m3uUrl);
-                    const username = urlObj.searchParams.get('username');
-                    const password = urlObj.searchParams.get('password');
-                    const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
-                    
-                    subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
-                    
-                    // UPDATED LINE: Uses the new 'renewalPath' variable
-                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don’t share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.</i>`;
-                    
-               } else if (templateType === 'renew-request') {
-                    const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
-                    if (!selectedPayment) {
-                        alert('Please select a payment option for the renew request.');
-                        return;
-                    }
-                    
-                    const months = selectedPayment.value;
-                    const devices = deviceCount.value;
-                    
-                    const customLink = document.getElementById(`link${months}`).value;
-                    let paymentLinkHTML = '';
-
-                    if (customLink) {
-                        paymentLinkHTML = `<a href="${customLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:bold;">✅ ${months} Months Renewal</a>`;
-                    } else {
-                        const genericLink = `https://www.${website}/checkout?plan=${months}`;
-                        paymentLinkHTML = `<a href="${genericLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:bold;">✅ ${months} Months account</a>`;
-                    }
-                    
-                    subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
-                    
-                    emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please click the link below:<br><br>${paymentLinkHTML}`;
-
-                    if (devices > 1) {
-                        emailContent += `<br><br>For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
-                    }
-
-                    emailContent += `<br><br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}.<br><br>Thank you for continuing to choose ${websiteName}. Enjoy your entertainment!<br><br>Best regards,<br>The ${websiteName} Team`;
-                    
-                } else if (templateType === 'renew-confirm') {
-                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                    emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br>Here are your updated details:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;👤 Username:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📅 New Expiration Date:<br>We're excited to have you continue streaming with us! If you have any questions or need assistance, feel free to reach out to our support team.<br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
-                
-                } else if (templateType === 'trial-spam') {
-                    subject = `Important: Trial Request Issue - ${websiteName}`;
-                    emailContent = `Hello,<br>Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.<br><br>To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:<br><br>👉 Request your trial again: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}/freetrialiptv/</a><br><br>Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.<br>Thank you for helping us keep the system fair and secure!<br>Best regards,<br>${websiteName}`;
-                
-                } else if (templateType === 'quick-renew') {
-                    subject = `Continue Your IPTV Experience - ${websiteName}`;
-
-                    // UPDATED LINE: Uses the new 'renewalPath' variable
-                    emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent.  <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
-                
-                } else if (templateType === 'quick-renew-after-trial') {
-                    subject = `Make the Most of Your Trial - ${websiteName}`;
-                    emailContent = `Hello,<br><br>We have received your renewal request, but I invite you to take full advantage of your free trial for 24 hours before renewing your account.<br><br>This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. <br><br>You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.<br><br>Regards,<br>${websiteName} Team`;
-                }
-                
-                // Display the generated email and subject
-                subjectOutput.textContent = subject;
-                outputContent.innerHTML = emailContent; // Use innerHTML to render HTML
-                
-                // Scroll to output
-                outputContent.scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // Copy subject to clipboard
-            copySubjectBtn.addEventListener('click', function() {
-                const subject = subjectOutput.textContent;
-                if (!subject) {
-                    alert('Please generate an email first.');
-                    return;
-                }
-                navigator.clipboard.writeText(subject).then(function() {
-                    notificationText.textContent = 'Subject copied to clipboard!';
-                    copyNotification.style.display = 'block';
-                    setTimeout(function() { copyNotification.style.display = 'none'; }, 3000);
-                }).catch(function(err) {
-                    console.error('Could not copy text: ', err);
-                    alert('Failed to copy subject to clipboard.');
-                });
-            });
-            
-            // Copy body to clipboard with formatting
-            copyBodyBtn.addEventListener('click', function() {
-                const htmlContent = outputContent.innerHTML;
-                const textContent = outputContent.innerText;
-
-                if (!htmlContent || textContent.includes('Your generated email will appear here')) {
-                    alert('Please generate an email first.');
-                    return;
-                }
-
-                navigator.clipboard.write([
-                    new ClipboardItem({
-                        'text/html': new Blob([htmlContent], { type: 'text/html' }),
-                        'text/plain': new Blob([textContent], { type: 'text/plain' })
-                    })
-                ]).then(function() {
-                    notificationText.textContent = 'Formatted email body copied!';
-                    copyNotification.style.display = 'block';
-                    setTimeout(function() {
-                        copyNotification.style.display = 'none';
-                    }, 3000);
-                }).catch(function(err) {
-                    console.error('Could not copy rich text: ', err);
-                    navigator.clipboard.writeText(textContent).then(() => {
-                        notificationText.textContent = 'Email body copied as plain text.';
-                        copyNotification.style.display = 'block';
-                        setTimeout(function() {
-                            copyNotification.style.display = 'none';
-                        }, 3000);
-                    }).catch(err2 => {
-                         console.error('Failed to copy plain text: ', err2);
-                         alert('Failed to copy email body.');
-                    });
-                });
             });
         });
+
+        templateSelect.addEventListener('change', function() {
+            const templateType = this.value;
+            
+            dynamicFields.classList.add('hidden');
+            m3uField.classList.add('hidden');
+            paymentField.classList.add('hidden');
+            deviceField.classList.add('hidden');
+            renewConfirmField.classList.add('hidden');
+            
+            if (templateType === 'trial') {
+                dynamicFields.classList.remove('hidden');
+                m3uField.classList.remove('hidden');
+            } else if (templateType === 'renew-request') {
+                dynamicFields.classList.remove('hidden');
+                paymentField.classList.remove('hidden');
+                deviceField.classList.remove('hidden');
+            } else if (templateType === 'renew-confirm') {
+                dynamicFields.classList.remove('hidden');
+                renewConfirmField.classList.remove('hidden');
+            }
+        });
+
+        generateBtn.addEventListener('click', function() {
+            const website = websiteSelect.value;
+            const templateType = templateSelect.value;
+            const websiteName = getWebsiteName(website);
+
+            if (!website || !templateType) {
+                alert('Please select both a website and a template type.');
+                return;
+            }
+
+            let emailContent = '';
+            let subject = '';
+
+            if (templateType === 'trial') {
+                const m3uUrl = document.getElementById('m3uUrl').value;
+                if (!m3uUrl) { alert('Please enter an M3U URL.'); return; }
+                const urlObj = new URL(m3uUrl);
+                const username = urlObj.searchParams.get('username');
+                const password = urlObj.searchParams.get('password');
+                const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                const renewalPath = renewalLinkPaths[website] || 'my-account';
+                
+                subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
+                emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br><br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br><b>🔑 Login Details:</b><br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>... (rest of trial email) ...`;
+
+            } else if (templateType === 'renew-request') {
+                const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
+                if (!selectedPayment) { alert('Please select a payment option.'); return; }
+
+                const months = selectedPayment.value;
+                const devices = deviceCount.value;
+                const linkType = document.querySelector('input[name="linkTypeOption"]:checked').value;
+                
+                const customLink = document.getElementById(`${linkType}_link${months}`).value;
+                const defaultLink = paymentLinksData[website]?.[linkType]?.[months] || '#';
+                const finalLink = customLink || defaultLink;
+                
+                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#3B82F6; text-decoration:underline; font-weight:bold;">✅ ${months} Months ${linkType.charAt(0).toUpperCase() + linkType.slice(1)} Link</a>`;
+
+                subject = `✅ Your ${websiteName} Renewal Request - ${months} Months`;
+                emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please click the link below:<br><br>✅ ${months} Months Renewal: ${paymentLinkHTML}`;
+                if (devices > 1) {
+                    emailContent += `<br><br>For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
+                }
+                emailContent += `<br><br>Best regards,<br>The ${websiteName} Team`;
+
+            } else if (templateType === 'renew-confirm') {
+                const usernamesInput = document.getElementById('usernames').value;
+                const expirationDate = document.getElementById('expirationDate').value;
+                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
+
+                if (!usernamesInput || !expirationDate) {
+                    alert('Please enter username(s) and an expiration date.');
+                    return;
+                }
+
+                const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
+                let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
+                
+                subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
+                emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${expirationDate}`;
+                
+                if (includeNote) {
+                    emailContent += `<br><br>Your additional device connections have also been renewed.`;
+                }
+                
+                emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
+            
+            } else if (templateType === 'quick-renew') {
+                const renewalPath = renewalLinkPaths[website] || 'my-account';
+                subject = `Continue Your IPTV Experience - ${websiteName}`;
+                emailContent = `Hello,<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>... (rest of quick-renew email) ...`;
+            }
+            
+            subjectOutput.textContent = subject;
+            outputContent.innerHTML = emailContent;
+        });
+
+        function copyContent(isHtml) {
+            const htmlContent = outputContent.innerHTML;
+            const textContent = outputContent.innerText;
+            if (!htmlContent || textContent.includes('Your generated email will appear here')) {
+                alert('Please generate an email first.');
+                return;
+            }
+            navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': new Blob([htmlContent], { type: 'text/html' }),
+                    'text/plain': new Blob([textContent], { type: 'text/plain' })
+                })
+            ]).then(() => {
+                notificationText.textContent = 'Formatted email body copied!';
+                copyNotification.style.display = 'block';
+                setTimeout(() => { copyNotification.style.display = 'none'; }, 3000);
+            }).catch(err => console.error('Could not copy rich text: ', err));
+        }
+
+        copySubjectBtn.addEventListener('click', () => {
+            if (!subjectOutput.textContent) { alert('Please generate an email first.'); return; }
+            navigator.clipboard.writeText(subjectOutput.textContent).then(() => {
+                notificationText.textContent = 'Subject copied to clipboard!';
+                copyNotification.style.display = 'block';
+                setTimeout(() => { copyNotification.style.display = 'none'; }, 3000);
+            });
+        });
+
+        copyBodyBtn.addEventListener('click', copyContent);
+    });
     </script>
 </body>
 </html>
