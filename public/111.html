@@ -120,9 +120,14 @@
                                     <textarea id="usernames" rows="3" placeholder="user123&#10;user456" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"></textarea>
                                 </div>
                                 <div>
-                                    <label for="expirationDate" class="block text-sm font-medium text-gray-700 mb-2">New Expiration Date</label>
-                                    <input type="date" id="expirationDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-                                </div>
+    <label for="expirationPlan" class="block text-sm font-medium text-gray-700 mb-2">Select Renewal Plan</label>
+    <select id="expirationPlan" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+        <option value="1">1 Month</option>
+        <option value="3">3 Months</option>
+        <option value="6">6 Months</option>
+        <option value="12">12 Months</option>
+    </select>
+</div>
                                 <div>
                                     <label class="flex items-center cursor-pointer">
                                         <input type="checkbox" id="includeMultiDeviceNote" class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
@@ -347,32 +352,48 @@
                 const defaultLink = paymentLinksData[website]?.[linkType]?.[months] || '#';
                 const finalLink = customLink || defaultLink;
                 
-                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#16A34A; text-decoration:none; font-weight:600;"> ${months} Months account</a>`;
+                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#16A34A; text-decoration:none; font-weight:600;"> ${months} Months account</a><br>`;
 
                 subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
                 emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:<br><br>✅ ${months} Months Renewal: ${paymentLinkHTML}
                 <br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: ${website}
-                <br>Thank you for continuing to choose XtreamCube. Enjoy your entertainment!`;
+                <br>Thank you for continuing to choose XtreamCube. 
+                <br>Enjoy your entertainment!`;
                 if (devices > 1) {
                     emailContent += `<br><br>For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
                 }
                 emailContent += `<br><br>Best regards,<br>The ${websiteName} Team`;
 
             } else if (templateType === 'renew-confirm') {
-                const usernamesInput = document.getElementById('usernames').value;
-                const expirationDate = document.getElementById('expirationDate').value;
-                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
+    const usernamesInput = document.getElementById('usernames').value;
+    const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
+    const includeNote = document.getElementById('includeMultiDeviceNote').checked;
 
-                if (!usernamesInput || !expirationDate) {
-                    alert('Please enter username(s) and an expiration date.');
-                    return;
-                }
+    if (!usernamesInput) {
+        alert('Please enter at least one username.');
+        return;
+    }
+    
+    // Calculate the new expiration date
+    const today = new Date();
+    today.setMonth(today.getMonth() + planMonths);
+
+    // Format the date to YYYY-MM-DD
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+    const calculatedExpirationDate = `${year}-${month}-${day}`;
 
                 const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
                 let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
                 
                 subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${expirationDate}`;
+               emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}
+               <br> We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>
+               Reply to this email<br>
+               Chat with us at : https://www.${website}<br>
+               Message us on WhatsApp at +1 765-244-5905<br>
+               `;
                 
                 if (includeNote) {
                     emailContent += `<br><br>Your additional device connections have also been renewed.`;
