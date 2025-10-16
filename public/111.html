@@ -349,32 +349,40 @@
                 }
                 emailContent += `<br><br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}<br><br>Thank you for continuing to choose ${websiteName}.<br>Enjoy your entertainment!<br><br>Best regards,<br>The ${websiteName} Team`;
 
-            } else if (templateType === 'renew-confirm') {
-                const usernamesInput = document.getElementById('usernames').value;
-                const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
-                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
-
-                if (!usernamesInput) { alert('Please enter at least one username.'); return; }
+                } else if (templateType === 'renew-confirm') {
+                    const usernamesInput = document.getElementById('usernames').value;
+                    const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
+                    const includeNote = document.getElementById('includeMultiDeviceNote').checked;
                 
-                const today = new Date();
-                today.setMonth(today.getMonth() + planMonths);
-
-                const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0');
-                const day = String(today.getDate()).padStart(2, '0');
-                const calculatedExpirationDate = `${year}-${month}-${day}`;
-
-                const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
-                let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
+                    if (!usernamesInput) {
+                        alert('Please enter at least one username.');
+                        return;
+                    }
+                    
+                    // Calculate the new expiration date
+                    const today = new Date();
+                    today.setMonth(today.getMonth() + planMonths);
                 
-                subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                emailContent = `Hello,<br><brThank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br><br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
+                    // Format the date to YYYY-MM-DD
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    const day = String(today.getDate()).padStart(2, '0');
+                    const calculatedExpirationDate = `${year}-${month}-${day}`;
                 
-                if (includeNote) {
-                    emailContent += `<br><br>Your additional device connections have also been renewed.`;
-                }
+                    // This part defines the username variable
+                    const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
+                    let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
+                    
+                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
                 
-                emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
+                    // FIX IS HERE: Corrected the <br><br> tag
+                    emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
+                    
+                    if (includeNote) {
+                        emailContent += `<br><br>Your additional device connections have also been renewed.`;
+                    }
+                    
+                    emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
             
             } else if (templateType === 'trial-spam') {
                 subject = `Important: Trial Request Issue - ${websiteName}`;
