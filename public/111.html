@@ -120,14 +120,14 @@
                                     <textarea id="usernames" rows="3" placeholder="user123&#10;user456" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"></textarea>
                                 </div>
                                 <div>
-    <label for="expirationPlan" class="block text-sm font-medium text-gray-700 mb-2">Select Renewal Plan</label>
-    <select id="expirationPlan" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-        <option value="1">1 Month</option>
-        <option value="3">3 Months</option>
-        <option value="6">6 Months</option>
-        <option value="12">12 Months</option>
-    </select>
-</div>
+                                    <label for="expirationPlan" class="block text-sm font-medium text-gray-700 mb-2">Select Renewal Plan</label>
+                                    <select id="expirationPlan" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                        <option value="1">1 Month</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="6">6 Months</option>
+                                        <option value="12">12 Months</option>
+                                    </select>
+                                </div>
                                 <div>
                                     <label class="flex items-center cursor-pointer">
                                         <input type="checkbox" id="includeMultiDeviceNote" class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
@@ -240,27 +240,14 @@
             'RediXel.com': 'renewal.html'
         };
         
-        // **IMPORTANT**: Edit these placeholder links with your actual payment URLs
         const paymentLinksData = {
             'XtreamCube.com': {
-                main: {'1': 'https://mjstore.sell.app/product/xc-pass-001',
-                       '3': 'https://mjstore.sell.app/product/xc-pass3', 
-                       '6': 'https://mjstore.sell.app/product/xc-pass6', 
-                       '12': 'https://mjstore.sell.app/product/xc-pass12'},
-                cap: {'1': 'https://newerazone.sell.app/product/xc-pass-1',
-                      '3': 'https://newerazone.sell.app/product/xc-pass-3',
-                      '6': 'https://newerazone.sell.app/product/xc-pass-6', 
-                      '12': 'https://newerazone.sell.app/product/xc-pass-12'}
+                main: {'1': 'https://mjstore.sell.app/product/xc-pass-001','3': 'https://mjstore.sell.app/product/xc-pass3','6': 'https://mjstore.sell.app/product/xc-pass6','12': 'https://mjstore.sell.app/product/xc-pass12'},
+                cap: {'1': 'https://newerazone.sell.app/product/xc-pass-1','3': 'https://newerazone.sell.app/product/xc-pass-3','6': 'https://newerazone.sell.app/product/xc-pass-6','12': 'https://newerazone.sell.app/product/xc-pass-12'}
             },
             '8KTV.tv': {
-                main: {'1': 'https://mjstore.sell.app/product/8k-pass1',
-                       '3': 'https://mjstore.sell.app/product/8k-pass3',
-                       '6': 'https://mjstore.sell.app/product/8k-pass6',
-                       '12': 'https://mjstore.sell.app/product/8k-pass12'},
-                cap: {'1': 'https://newerazone.sell.app/product/8k-pass-1',
-                      '3': 'https://newerazone.sell.app/product/8k-pass-3',
-                      '6': 'https://newerazone.sell.app/product/8k-pass-6',
-                      '12': 'https://newerazone.sell.app/product/8k-pass-12'}
+                main: {'1': 'https://mjstore.sell.app/product/8k-pass1','3': 'https://mjstore.sell.app/product/8k-pass3','6': 'https://mjstore.sell.app/product/8k-pass6','12': 'https://mjstore.sell.app/product/8k-pass12'},
+                cap: {'1': 'https://newerazone.sell.app/product/8k-pass-1','3': 'https://newerazone.sell.app/product/8k-pass-3','6': 'https://newerazone.sell.app/product/8k-pass-6','12': 'https://newerazone.sell.app/product/8k-pass-12'}
             },
             'TVToohigh.com': {
                 main: {'1': '#', '3': '#', '6': '#', '12': '#'},
@@ -283,13 +270,8 @@
 
         linkTypeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.value === 'main') {
-                    mainPaymentLinks.classList.remove('hidden');
-                    capPaymentLinks.classList.add('hidden');
-                } else {
-                    mainPaymentLinks.classList.add('hidden');
-                    capPaymentLinks.classList.remove('hidden');
-                }
+                mainPaymentLinks.classList.toggle('hidden', this.value !== 'main');
+                capPaymentLinks.classList.toggle('hidden', this.value !== 'cap');
             });
         });
 
@@ -331,14 +313,20 @@
             if (templateType === 'trial') {
                 const m3uUrl = document.getElementById('m3uUrl').value;
                 if (!m3uUrl) { alert('Please enter an M3U URL.'); return; }
-                const urlObj = new URL(m3uUrl);
-                const username = urlObj.searchParams.get('username');
-                const password = urlObj.searchParams.get('password');
-                const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
-                const renewalPath = renewalLinkPaths[website] || 'my-account';
                 
-                subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
-                emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br><br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br><b>🔑 Login Details:</b><br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>... (rest of trial email) ...`;
+                try {
+                    const urlObj = new URL(m3uUrl);
+                    const username = urlObj.searchParams.get('username');
+                    const password = urlObj.searchParams.get('password');
+                    const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
+                    const renewalPath = renewalLinkPaths[website] || 'my-account';
+                    
+                    subject = `🎉 Welcome to Your 24-Hour Free Trial with ${websiteName}! 🎉`;
+                    emailContent = `Hi,<br><br>Welcome to ${websiteName}! 🚀 Your 24-hour trial is ready.<br>We recommend using a VPN to bypass internet provider restrictions and ensure the best streaming experience.<br><br><b>🎉 Special Promos</b><br>✨ Multi-Device Deal: 15% OFF on all additional devices<br>✨ Crypto Bonus: 5% OFF every plan when paying with crypto<br><br>✨Please take the time to fully enjoy your trial.<br>If you’re satisfied and want to continue, you can submit your renewal request here:<br>👉🔗 <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew Your Account Here</a><br><br>🗺️ Country: Auto / VPN whitelisted<br>⏰ Expiration: 24h from email time<br><br><b>🔑 Login Details:</b><br><br>🌐 Profile: ${websiteName}<br>👤 Username: ${username}<br>🔒 Password: ${password}<br>🔗 URL: ${baseUrl}<br><br>📂 M3U Link: ${m3uUrl}<br><br>🔗 EPG Link: ${baseUrl}/xmltv.php?username=${username}&password=${password}<br><br>⚠️ Service links are not clickable — you will need an IPTV player to be able to stream.<br><br><b>📺 For IPTV Smarters App Users:</b><br>Use the links below based on your device:<br>📌 Samsung/LG TVs: http://hi-ott.me<br>📌 Smarters Pro (UK/IT/US/CA): http://cf.hi-ott.me<br><br>⚠️ Note: IPTV Smarters is not recommended as a player, but it can work if you choose to use it. For the best experience, you can also ask us for our recommended list of apps per device.<br><br><b>❓💬 Need Help?</b><br>Simply reply to this email if you have questions or need assistance setting up.<br><br><b>💡 Tips for the Best Experience</b><br>1️⃣ Use one main player + keep a backup<br>2️⃣ VPN = privacy + harder to block links<br>3️⃣ URL must start with http (not https)<br>4️⃣ Keep login details safe — don’t share<br><br>✨ Enjoy your trial!<br>The ${websiteName} Team 🔥<br><br><hr><br><i>You received this email because you requested a trial on ${website}. If this wasn’t you, please ignore it.</i>`;
+                } catch (error) {
+                    alert('Invalid M3U URL provided. Please check the format and try again.');
+                    return;
+                }
 
             } else if (templateType === 'renew-request') {
                 const selectedPayment = document.querySelector('input[name="paymentOption"]:checked');
@@ -352,48 +340,35 @@
                 const defaultLink = paymentLinksData[website]?.[linkType]?.[months] || '#';
                 const finalLink = customLink || defaultLink;
                 
-                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#16A34A; text-decoration:none; font-weight:600;"> ${months} Months account</a><br>`;
+                const paymentLinkHTML = `<a href="${finalLink}" target="_blank" style="color:#16A34A; text-decoration:underline; font-weight:600;">${months} Months account</a>`;
 
                 subject = `✅ Your ${websiteName} Renewal Request - Pass ${months}`;
-                emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:<br><br>✅ ${months} Months Renewal: ${paymentLinkHTML}
-                <br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: ${website}
-                <br>Thank you for continuing to choose XtreamCube. 
-                <br>Enjoy your entertainment!`;
+                emailContent = `Hello,<br><br>Thank you for your renewal request! To complete your ${months} months subscription renewal, please use the link below:<br><br>✅ ${months} Months Renewal: ${paymentLinkHTML}`;
                 if (devices > 1) {
                     emailContent += `<br><br>For multiple devices, please adjust the quantity at checkout to receive a 15% discount. Upon receipt of payment, we will renew your initial account and provide separate logins for your additional accounts.`;
                 }
-                emailContent += `<br><br>Best regards,<br>The ${websiteName} Team`;
+                emailContent += `<br><br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}<br><br>Thank you for continuing to choose ${websiteName}.<br>Enjoy your entertainment!<br><br>Best regards,<br>The ${websiteName} Team`;
 
             } else if (templateType === 'renew-confirm') {
-    const usernamesInput = document.getElementById('usernames').value;
-    const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
-    const includeNote = document.getElementById('includeMultiDeviceNote').checked;
+                const usernamesInput = document.getElementById('usernames').value;
+                const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
+                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
 
-    if (!usernamesInput) {
-        alert('Please enter at least one username.');
-        return;
-    }
-    
-    // Calculate the new expiration date
-    const today = new Date();
-    today.setMonth(today.getMonth() + planMonths);
+                if (!usernamesInput) { alert('Please enter at least one username.'); return; }
+                
+                const today = new Date();
+                today.setMonth(today.getMonth() + planMonths);
 
-    // Format the date to YYYY-MM-DD
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(today.getDate()).padStart(2, '0');
-    const calculatedExpirationDate = `${year}-${month}-${day}`;
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const calculatedExpirationDate = `${year}-${month}-${day}`;
 
                 const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
                 let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
                 
                 subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-               emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}
-               <br> We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>
-               Reply to this email<br>
-               Chat with us at : https://www.${website}<br>
-               Message us on WhatsApp at +1 765-244-5905<br>
-               `;
+                emailContent = `Hello,<br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
                 
                 if (includeNote) {
                     emailContent += `<br><br>Your additional device connections have also been renewed.`;
@@ -401,17 +376,25 @@
                 
                 emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
             
+            } else if (templateType === 'trial-spam') {
+                subject = `Important: Trial Request Issue - ${websiteName}`;
+                emailContent = `Hello,<br>Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.<br><br>To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:<br><br>👉 Request your trial again: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}/freetrialiptv/</a><br><br>Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.<br>Thank you for helping us keep the system fair and secure!<br>Best regards,<br>${websiteName}`;
+                
             } else if (templateType === 'quick-renew') {
                 const renewalPath = renewalLinkPaths[website] || 'my-account';
                 subject = `Continue Your IPTV Experience - ${websiteName}`;
-                emailContent = `Hello,<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>... (rest of quick-renew email) ...`;
+                emailContent = `Hello,<br><br>Your trial access lasts 24 hours from when your login details were sent.  <br><br>Use this time to test the service on every device and make sure everything works smoothly before renewing.<br><br>When you're ready, you can:<br><br>1. Renew your subscription: <a href="https://www.${website}/${renewalPath}/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Renew your account</a><br><br>2. Request another 24-hour trial: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">Free Trial</a><br><br>If you have any questions or need assistance, simply reply to this email or reach out via:<br><br>Live chat: www.${website}<br><br>WhatsApp: +1 765 244 5905<br><br>Email: support@${website}<br><br>We look forward to ensuring you have the best streaming experience.<br><br>Best regards,<br>www.${websiteName}`;
+                
+            } else if (templateType === 'quick-renew-after-trial') {
+                subject = `Make the Most of Your Trial - ${websiteName}`;
+                emailContent = `Hello,<br><br>We have received your renewal request, but I invite you to take full advantage of your free trial for 24 hours before renewing your account.<br><br>This will allow you to fully discover the content and ensure that you are fully satisfied before renewing. <br><br>You can reply to this email at any time to renew your account or reapply again, but take advantage of your trial first.<br><br>Regards,<br>${websiteName} Team`;
             }
             
             subjectOutput.textContent = subject;
             outputContent.innerHTML = emailContent;
         });
 
-        function copyContent(isHtml) {
+        function copyContent() {
             const htmlContent = outputContent.innerHTML;
             const textContent = outputContent.innerText;
             if (!htmlContent || textContent.includes('Your generated email will appear here')) {
