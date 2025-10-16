@@ -350,40 +350,54 @@
                 emailContent += `<br><br>If you encounter any issues or have questions, feel free to reach out to us via live chat at: www.${website}<br><br>Thank you for continuing to choose ${websiteName}.<br>Enjoy your entertainment!<br><br>Best regards,<br>The ${websiteName} Team`;
 
                 } else if (templateType === 'renew-confirm') {
-                    const usernamesInput = document.getElementById('usernames').value;
-                    const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
-                    const includeNote = document.getElementById('includeMultiDeviceNote').checked;
-                
-                    if (!usernamesInput) {
-                        alert('Please enter at least one username.');
-                        return;
-                    }
-                    
-                    // Calculate the new expiration date
-                    const today = new Date();
-                    today.setMonth(today.getMonth() + planMonths);
-                
-                    // Format the date to YYYY-MM-DD
-                    const year = today.getFullYear();
-                    const month = String(today.getMonth() + 1).padStart(2, '0');
-                    const day = String(today.getDate()).padStart(2, '0');
-                    const calculatedExpirationDate = `${year}-${month}-${day}`;
-                
-                    // This part defines the username variable
-                    const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
-                    let userDetailsHTML = usernames.map(u => `👤 Username: ${u.trim()}`).join('<br>');
-                    
-                    subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                
-                    // FIX IS HERE: Corrected the <br><br> tag
-                    emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br>${userDetailsHTML}<br>📅 New Expiration Date: ${calculatedExpirationDate}<br><br>We’re excited to have you continue streaming with us! <br> If you need anything, like troubleshooting, device setup help or just have a question, you can: <br>Reply to this email<br>Chat with us at : https://www.${website}<br>Message us on WhatsApp at +1 765-244-5905`;
-                    
-                    if (includeNote) {
-                        emailContent += `<br><br>Your additional device connections have also been renewed.`;
-                    }
-                    
-                    emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${websiteName} Team ✨`;
+                const usernamesInput = document.getElementById('usernames').value;
+                const planMonths = parseInt(document.getElementById('expirationPlan').value, 10);
+                const includeNote = document.getElementById('includeMultiDeviceNote').checked;
             
+                if (!usernamesInput) {
+                    alert('Please enter at least one username.');
+                    return;
+                }
+            
+                const today = new Date();
+                today.setMonth(today.getMonth() + planMonths);
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const calculatedExpirationDate = `${year}-${month}-${day}`;
+            
+                const usernames = usernamesInput.split('\n').filter(u => u.trim() !== '');
+                let userDetailsHTML = usernames
+                    .map(u => `👤 Username: <b>${u.trim()}</b>`)
+                    .join('<br><br>');
+            
+                const safeWebsiteName = websiteName
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            
+                subject = `✅🎉 Account Renewal Confirmation - ${safeWebsiteName}!`;
+            
+                emailContent = `
+                    Hello,<br><br>
+                    Thank you for renewing your account with ${safeWebsiteName}!<br><br>
+                    Here are your updated details:<br><br>
+                    ${userDetailsHTML}<br><br>
+                    📅 <b>New Expiration Date:</b> ${calculatedExpirationDate}<br><br>
+                    We’re excited to have you continue streaming with us!<br><br>
+                    If you need anything — troubleshooting, setup help, or just a question — you can:<br>
+                    • Reply to this email<br>
+                    • Chat with us at: <a href="https://www.${website}" target="_blank">www.${website}</a><br>
+                    • Message us on WhatsApp at <a href="https://wa.me/17652445905" target="_blank">+1 765-244-5905</a><br>
+                `;
+            
+                if (includeNote) {
+                    emailContent += `<br><br>Your additional device connections have also been renewed.`;
+                }
+            
+                emailContent += `<br><br>Happy Streaming! 😊<br>✨ The ${safeWebsiteName} Team ✨`;
+            }
+
             } else if (templateType === 'trial-spam') {
                 subject = `Important: Trial Request Issue - ${websiteName}`;
                 emailContent = `Hello,<br>Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.<br><br>To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:<br><br>👉 Request your trial again: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}/freetrialiptv/</a><br><br>Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.<br>Thank you for helping us keep the system fair and secure!<br>Best regards,<br>${websiteName}`;
