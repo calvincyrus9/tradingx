@@ -183,6 +183,8 @@
                         </div>
                         
                         <button id="generateBtn" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center"><i class="fas fa-envelope mr-2"></i> Generate Email</button>
+                        <button id="resetBtn" type="button" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center"><i class="fas fa-envelope mr-2"></i>Reset</button>
+
                     </div>
                 </div>
                 
@@ -220,6 +222,7 @@
         const toggleLinks = document.getElementById('toggleLinks');
         const deviceField = document.getElementById('deviceField');
         const generateBtn = document.getElementById('generateBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const subjectOutput = document.getElementById('subjectOutput');
         const outputContent = document.getElementById('outputContent');
         const copySubjectBtn = document.getElementById('copySubjectBtn');
@@ -412,6 +415,16 @@
             
             subjectOutput.textContent = subject;
             outputContent.innerHTML = emailContent;
+        });
+        resetBtn.addEventListener('click', function() {
+        websiteSelect.selectedIndex = 0;
+        templateSelect.selectedIndex = 0;
+    
+        // Optional: clear generated output if you have one
+        const outputArea = document.getElementById('output');
+        if (outputArea) outputArea.textContent = '';
+    
+        alert('Form has been reset.');
         });
 
         function copyContent() {
