@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Email Generator</title>
+    <title>ZIJ Adaptive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -74,7 +74,7 @@
     
     <div class="container mx-auto px-4">
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-gray-800 mb-3">IPTV Email Generator</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">ZIJ Adaptive</h1>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">Create professional emails for trials, renewals, and customer support with dynamic content</p>
         </header>
 
@@ -398,7 +398,7 @@
                 const userDetailsHTML = usernames.map(u => `👤 Username: <b>${u.trim()}</b>`).join('<br>');
 
                 subject = `✅🎉 Account Renewal Confirmation - ${websiteName}!`;
-                emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: <b>${calculatedExpirationDate}</b><br><br>We're excited to have you continue streaming with us! <br><br>If you need anything, like troubleshooting, device setup help or just have a question, you can:<br><br>Reply to this email<br>Chat with us at: <a href="https://www.${website}" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}</a><br>Message us on WhatsApp at +1 765-244-5905`;
+                emailContent = `Hello,<br><br>Thank you for renewing your account with ${websiteName}!<br><br>Here are your updated details:<br><br>${userDetailsHTML}<br><br>📅 New Expiration Date: <b>${calculatedExpirationDate}</b><br><br>We're excited to have you continue streaming with us! <br><br>If you need anything, like troubleshooting, device setup help or just have a question, you can:<br><br>📧 Reply to this email<br>💬 Live chat: www.${website}<br>📞 WhatsApp: +1 765-244-5905`;
 
                 if (includeNote) {
                     emailContent += `<br><br>Your additional device connections have also been renewed.`;
@@ -407,7 +407,7 @@
 
             } else if (templateType === 'trial-spam') {
                 subject = `Important: Trial Request Issue - ${websiteName}`;
-                emailContent = `Hello,<br>Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.<br><br>To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:<br><br>👉 Request your trial again: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}/freetrialiptv/</a><br><br>Once we receive your new request, I'll activate your trial immediately. If you still encounter any issues, just reply to this email and I'll assist you personally.<br>Thank you for helping us keep the system fair and secure!<br>Best regards,<br>${websiteName}`;
+                emailContent = `Hello,<br><br>Your recent free trial request was flagged as potential spam by our system. We enforce these checks to prevent manipulation and abuse of our trial service.<br><br>To proceed, please disable any VPN or proxy, then resend your 24-hour trial or renewal request using a clean, direct internet connection:<br><br>👉 Request your trial again: <a href="https://www.${website}/freetrialiptv/" target="_blank" style="color:#3B82F6; text-decoration:underline;">https://www.${website}/freetrialiptv/</a><br><br>Once we receive your new request, I'll activate your trial immediately.<br> If you still encounter any issues, just reply to this email and I'll assist you personally.<br><br>Thank you for helping us keep the system fair and secure!<br><br>Best regards,<br>The ${websiteName} Team`;
                 
             } else if (templateType === 'quick-renew') {
                 const renewalPath = renewalLinkPaths[website] || 'my-account';
